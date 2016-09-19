@@ -1,15 +1,4 @@
 set(SOURCE_FILES
-#    externals/EasyBMP/include/EasyBMP.h
-#    externals/EasyBMP/include/EasyBMP_BMP.h
-#    externals/EasyBMP/include/EasyBMP_DataStructures.h
-#    externals/EasyBMP/include/EasyBMP_VariousBMPutilities.h
-#    externals/EasyBMP/src/EasyBMP.cpp
-#    externals/EasyBMP/BSD_revised_license.txt
-#    externals/EasyBMP/Makefile
-#    include/align.h
-#    include/io.h
-#    include/matrix.h
-#    include/matrix.hpp
     align.cpp
     io.cpp
     main.cpp

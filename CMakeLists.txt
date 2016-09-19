@@ -29,10 +29,22 @@ set (CMAKE_BUILD_TYPE Debug)
 # add a list of dirs to the list in which headers will be searched
 include_directories(
         ${CMAKE_SOURCE_DIR}/include
-        ${CMAKE_SOURCE_DIR}/externals/include
+        ${CMAKE_SOURCE_DIR}/externals/EasyBMP/include
 )
 
-
+#set(SOURCE_FILES
+#            externals/EasyBMP/include/EasyBMP.h
+#            externals/EasyBMP/include/EasyBMP_BMP.h
+#            externals/EasyBMP/include/EasyBMP_DataStructures.h
+#            externals/EasyBMP/include/EasyBMP_VariousBMPutilities.h
+#            externals/EasyBMP/src/EasyBMP.cpp
+#            externals/EasyBMP/BSD_revised_license.txt
+#            externals/EasyBMP/Makefile
+#            include/align.h
+#            include/io.h
+#            include/matrix.h
+#            include/matrix.hpp
+#        )
 
 message("going to process subdirs...")
 add_subdirectory(src)  # jump to subdir in search of an CMakeLists for it's processing. "process_subdirectory"

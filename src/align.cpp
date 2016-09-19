@@ -1,15 +1,62 @@
 #include "align.h"
 #include <string>
+#include <assert.h>
 
 
 using std::string;
 using std::cout;
 using std::endl;
 
-Image align(Image srcImage, bool isPostprocessing, std::string postprocessingType, double fraction, bool isMirror, 
-            bool isInterp, bool isSubpixel, double subScale)
+
+Image align(Image srcImage,
+            bool isPostprocessing,
+            std::string postprocessingType,
+            double fraction,
+            bool isMirror,
+            bool isInterp,
+            bool isSubpixel,
+            double subScale)
 {
-    return srcImage;
+    struct Img
+    {
+        Image r{}, g{}, b{};
+    };
+
+    Img img;
+    img.b = srcImage.submatrix(0, 0, srcImage.n_rows / 3, srcImage.n_cols);
+    img.g = srcImage.submatrix(srcImage.n_rows / 3, 0, srcImage.n_rows / 3, srcImage.n_cols);
+    img.r = srcImage.submatrix(srcImage.n_rows / 3 * 2, 0, srcImage.n_rows / 3, srcImage.n_cols);
+
+    auto &fixed = img.r;
+    for (auto &movable : {img.b, img.g}) {
+        constexpr ssize_t lShift = -15, rShift = 15;
+        for (ssize_t horShift = lShift; horShift <= rShift; horShift++) {
+            for (ssize_t vertShift = lShift; vertShift <= rShift; vertShift++) {
+                auto fixedSub = fixed.submatrix(vertShift,
+                                                horShift,
+                                                vertShift + fixed.n_rows,
+                                                horShift + fixed.n_cols);
+                auto movableSub = movable.submatrix(-vertShift,
+                                                    -horShift,
+                                                    -vertShift + movable.n_rows,
+                                                    -horShift + movable.n_cols);
+                assert(movableSub.n_rows == fixedSub.n_rows);
+                assert(movableSub.n_cols == fixedSub.n_cols);
+
+            }
+        }
+    }
+
+
+    for (size_t i = 0; i < img.r.n_rows; i++) {
+        for (size_t j = 0; j < img.r.n_cols; j++) {
+            img.r(i, j) = std::make_tuple(std::get<0>(img.r(i, j)),
+                                          std::get<1>(img.g(i, j)),
+                                          std::get<2>(img.b(i, j)));
+        }
+    }
+
+    return img.r;
 }
 
 Image sobel_x(Image src_image) {

@@ -8,6 +8,8 @@
 #include <string>
 #include <type_traits>
 
+#include "math.hpp"
+
 typedef unsigned int uint;
 
 template<typename ValueT>
@@ -73,15 +75,11 @@ public:
     // (2 * radius + 1) x (2 * radius + 1), applies operator to that
     // neighbourhood and writes result in a new matrix of the same size
     // Minimum radius is 0, operator will process only one pixel every time
-    template<typename UnaryMatrixOperator>
+
     // Function unary map returns a matrix of
-    Matrix<
-    // type which is returned
-        typename std::result_of<
-    // by operator applied to neighbourhood of pixel
-            UnaryMatrixOperator(Matrix<ValueT>)
-        >::type
-    >
+    // type which is returned by operator applied to neighbourhood of pixel
+    template<typename UnaryMatrixOperator>
+    Matrix<typename std::result_of<UnaryMatrixOperator(Matrix<ValueT>)>::type>
     unary_map(const UnaryMatrixOperator &op) const;
 
     // Same, but unary operator is mutable.
@@ -113,8 +111,8 @@ public:
     // Matrix<int> a = { {1, 2, 3},
     //                   {4, 5, 6} };
     // cout << a.submatrix(1, 1, 1, 2); // 5 6
-    const Matrix<ValueT> submatrix(uint prow, uint pcol,
-                                   uint rows, uint cols) const;
+    const Matrix<ValueT> submatrix(ssize_t prow, ssize_t pcol,
+                                   ssize_t rows, ssize_t cols) const;
 
 private:
     // Stride - number of elements between two rows (needed for efficient

@@ -2,9 +2,16 @@
 
 #include "io.h"
 #include "matrix.h"
+#include "math.hpp"
 
-Image align(Image srcImage, bool isPostprocessing, std::string postprocessingType, double fraction, bool isMirror, 
-            bool isInterp, bool isSubpixel, double subScale);  
+Image align(Image srcImage,
+            bool isPostprocessing,
+            std::string postprocessingType,
+            double fraction,
+            bool isMirror,
+            bool isInterp,
+            bool isSubpixel,
+            double subScale);
 
 Image sobel_x(Image src_image);
 

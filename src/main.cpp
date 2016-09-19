@@ -4,15 +4,17 @@
 #include <fstream>
 #include <initializer_list>
 #include <limits>
+#include <unistd.h>
+
+#include "align.h"
 
 using std::string;
 using std::stringstream;
 using std::cout;
 using std::cerr;
 using std::endl;
-using std::numeric_limits;
 
-#include "align.h"
+using std::numeric_limits;
 
 void print_help(const char *argv0)
 {
@@ -260,4 +262,15 @@ int main(int argc, char **argv)
         cerr << "For help type: " << endl << argv[0] << " --help" << endl;
         return 1;
     }
+
+    // TODO: remove
+    if (!fork()) {
+        std::stringstream ss;
+        constexpr size_t dst_idx = 2;
+        ss << "eog -n " << argv[dst_idx];
+        if (!std::system(ss.str().c_str())) {}
+        return 0;
+    }
+
+    return 0;
 }
