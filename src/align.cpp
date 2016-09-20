@@ -30,11 +30,6 @@ Image align(Image srcImage,
         ssize_t vertShift;
     };
 
-    Img img;
-    img.b = srcImage.submatrix(0, 0, srcImage.n_rows / 3, srcImage.n_cols);
-    img.g = srcImage.submatrix(srcImage.n_rows / 3, 0, srcImage.n_rows / 3, srcImage.n_cols);
-    img.r = srcImage.submatrix(srcImage.n_rows / 3 * 2, 0, srcImage.n_rows / 3, srcImage.n_cols);
-
     auto calcSubmatrixes = [] (const Image &fixed,
                                const Image &movable,
                                ssize_t vertShift,
@@ -49,37 +44,47 @@ Image align(Image srcImage,
                                             -horShift + movable.n_cols);
         assert(fixedSub.n_rows == movableSub.n_rows);
         assert(fixedSub.n_rows == movableSub.n_cols);
-        return {fixedSub, movableSub};
+        return std::tuple<Image, Image>{fixedSub, movableSub};
     };
 
-    auto calcAlignmentForPair = [] (const Image &fixed, const Image &movable) {
-        ShiftStorage shiftStor{std::numeric_limits<MetricType>::max(), 0, 0};
+    auto calcAlignmentForPair = [&calcSubmatrixes] (const Image &fixed, const Image &movable) {
+        ShiftStorage shiftStorage{std::numeric_limits<MetricType>::max(), 0, 0};
         for (ssize_t horShift = -shiftLen; horShift <= shiftLen; horShift++) {
             for (ssize_t vertShift = -shiftLen; vertShift <= shiftLen; vertShift++) {
-                std::tie(fixed, movable) = calcSubmatrixes(fixed, movable, vertShift, horShift);
+                Image fixedCopy, movableCopy;
+                std::tie(fixedCopy, movableCopy) = calcSubmatrixes(fixed, movable, vertShift, horShift);
                 // FIXME: what if zero-sized image?
-                // FIXME: there are non-same-sized images. Use min and max.
+                // --FIXME: there are non-same-sized images. Use min and max.
 
-                auto metric = squareMean(fixed, movable);
-                if (metric <= shiftStor.metric) {
+                auto metric = squareMean(fixedCopy, movableCopy);
+                if (metric <= shiftStorage.metric) {
                     // store
-                    shiftStor.metric = metric;
-                    shiftStor.horShift = horShift;
-                    shiftStor.vertShift = vertShift;
+                    shiftStorage.metric = metric;
+                    shiftStorage.horShift = horShift;
+                    shiftStorage.vertShift = vertShift;
                 }
             }
         }
-        return shiftStor;
+        return shiftStorage;
     };
+
+    /// split
+    Img img;
+    img.b = srcImage.submatrix(0, 0, srcImage.n_rows / 3, srcImage.n_cols);
+    img.g = srcImage.submatrix(srcImage.n_rows / 3, 0, srcImage.n_rows / 3, srcImage.n_cols);
+    img.r = srcImage.submatrix(srcImage.n_rows / 3 * 2, 0, srcImage.n_rows / 3, srcImage.n_cols);
 
     /// calc
     auto gAlignment = calcAlignmentForPair(img.r, img.g);
     auto bAlignment = calcAlignmentForPair(img.r, img.b);
 
-    /// colorize
+    /// colorize (red image -> RGB image)
     for (size_t i = 0; i < img.r.n_rows; i++) {
         for (size_t j = 0; j < img.r.n_cols; j++) {
-            auto g = std::get<1>(img.g(i + gAlignment.vertShift, j + gAlignment.horShift));
+            auto g = std::get<1>(img.g(norm(i - gAlignment.vertShift, img.g.n_cols - 1),
+                                       norm(j - gAlignment.horShift, img.g.n_rows - 1)));
+            auto b = std::get<2>(img.b(norm(i - bAlignment.vertShift, img.b.n_cols - 1),
+                                       norm(j - bAlignment.horShift, img.b.n_rows - 1)));
             img.r(i, j) = std::make_tuple(std::get<0>(img.r(i, j)),
                                           g,
                                           b);
@@ -87,16 +92,15 @@ Image align(Image srcImage,
     }
 
     /// crop
-    uint8_t left = std::min({0, })
-
-
-
-
-
-
-
-
-    return img.r;
+    auto row = std::max({ssize_t(0), gAlignment.vertShift, bAlignment.vertShift});
+    auto col = std::max({ssize_t(0), gAlignment.horShift, bAlignment.horShift});
+    auto rows = std::min({ssize_t(img.r.n_rows),
+                            img.r.n_rows + gAlignment.vertShift,
+                            img.r.n_rows + bAlignment.vertShift});
+    auto cols = std::min({ssize_t(img.r.n_cols),
+                          img.r.n_cols + gAlignment.horShift,
+                          img.r.n_cols + bAlignment.horShift});
+    return img.r.submatrix(row, col, rows, cols);
 }
 
 Image sobel_x(Image src_image) {

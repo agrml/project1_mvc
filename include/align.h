@@ -2,7 +2,7 @@
 
 #include "io.h"
 #include "matrix.h"
-#include "math.hpp"
+#include "math.h"
 
 Image align(Image srcImage,
             bool isPostprocessing,

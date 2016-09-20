@@ -109,8 +109,8 @@ public:
     // Matrix<int> a = { {1, 2, 3},
     //                   {4, 5, 6} };
     // cout << a.submatrix(1, 1, 1, 2); // 5 6
-    const Matrix<ValueT> submatrix(uint prow, uint pcol,
-                                   uint rows, uint cols) const;
+    const Matrix<ValueT> submatrix(ssize_t prow, ssize_t pcol,
+                                   ssize_t rows, ssize_t cols) const;
 
 private:
     // Stride - number of elements between two rows (needed for efficient

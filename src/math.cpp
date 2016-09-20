@@ -1,5 +1,5 @@
 #include <assert.h>
-#include "math.hpp"
+#include "math.h"
 
 template <typename ResT, typename SrcT>
 ResT normalizeNumber(SrcT src,
@@ -43,22 +43,22 @@ MetricType crossCorrelation(const Image &img1,
     return res;
 }
 
-std::tuple<MetricType, Image> calculateMetric(const Image &fixed,
-                                              const Image &movable,
-                                              ssize_t vertShift,
-                                              ssize_t horShift,
-                                              std::function<uint64_t(Image, Image, size_t, size_t)> &metric)
-{
-    auto fixedSub = fixed.submatrix(vertShift,
-                                    horShift,
-                                    vertShift + fixed.n_rows,
-                                    horShift + fixed.n_cols);
-    auto movableSub = movable.submatrix(-vertShift,
-                                        -horShift,
-                                        -vertShift + movable.n_rows,
-                                        -horShift + movable.n_cols);
-    assert(movableSub.n_rows == fixedSub.n_rows);
-    assert(movableSub.n_cols == fixedSub.n_cols);
-    // TODO: std::finction usage
-    return {fixedSub, metric(fixedSub, movableSub)};
-}
+//std::tuple<MetricType, Image> calculateMetric(const Image &fixed,
+//                                              const Image &movable,
+//                                              ssize_t vertShift,
+//                                              ssize_t horShift,
+//                                              std::function<uint64_t(Image, Image, size_t, size_t)> &metric)
+//{
+//    auto fixedSub = fixed.submatrix(vertShift,
+//                                    horShift,
+//                                    vertShift + fixed.n_rows,
+//                                    horShift + fixed.n_cols);
+//    auto movableSub = movable.submatrix(-vertShift,
+//                                        -horShift,
+//                                        -vertShift + movable.n_rows,
+//                                        -horShift + movable.n_cols);
+//    assert(movableSub.n_rows == fixedSub.n_rows);
+//    assert(movableSub.n_cols == fixedSub.n_cols);
+//    // TODO: std::finction usage
+//    return {fixedSub, metric(fixedSub, movableSub)};
+//}
