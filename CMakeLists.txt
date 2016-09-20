@@ -32,7 +32,7 @@ include_directories(
         ${CMAKE_SOURCE_DIR}/externals/EasyBMP/include
 )
 
-#set(SOURCE_FILES
+set(SOURCE_FILES
 #            externals/EasyBMP/include/EasyBMP.h
 #            externals/EasyBMP/include/EasyBMP_BMP.h
 #            externals/EasyBMP/include/EasyBMP_DataStructures.h
@@ -40,12 +40,23 @@ include_directories(
 #            externals/EasyBMP/src/EasyBMP.cpp
 #            externals/EasyBMP/BSD_revised_license.txt
 #            externals/EasyBMP/Makefile
-#            include/align.h
-#            include/io.h
-#            include/matrix.h
-#            include/matrix.hpp
-#        )
+
+            include/align.h
+            include/io.h
+            include/matrix.h
+            include/matrix.hpp
+            include/math.hpp
+            src/align.cpp
+            src/io.cpp
+            src/main.cpp
+            src/matrix_example.cpp
+            src/math.cpp
+        )
 
 message("going to process subdirs...")
-add_subdirectory(src)  # jump to subdir in search of an CMakeLists for it's processing. "process_subdirectory"
+#add_subdirectory(src)  # jump to subdir in search of an CMakeLists for it's processing. "process_subdirectory"
 #add_subdirectory(externals)
+
+add_executable(align_project ${SOURCE_FILES}) # создание цели сборки, зависящей от таких-то файлов?
+
+

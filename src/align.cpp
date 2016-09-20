@@ -27,22 +27,58 @@ Image align(Image srcImage,
     img.g = srcImage.submatrix(srcImage.n_rows / 3, 0, srcImage.n_rows / 3, srcImage.n_cols);
     img.r = srcImage.submatrix(srcImage.n_rows / 3 * 2, 0, srcImage.n_rows / 3, srcImage.n_cols);
 
-    auto &fixed = img.r;
-    for (auto &movable : {img.b, img.g}) {
-        constexpr ssize_t lShift = -15, rShift = 15;
-        for (ssize_t horShift = lShift; horShift <= rShift; horShift++) {
-            for (ssize_t vertShift = lShift; vertShift <= rShift; vertShift++) {
-                auto fixedSub = fixed.submatrix(vertShift,
-                                                horShift,
-                                                vertShift + fixed.n_rows,
-                                                horShift + fixed.n_cols);
-                auto movableSub = movable.submatrix(-vertShift,
-                                                    -horShift,
-                                                    -vertShift + movable.n_rows,
-                                                    -horShift + movable.n_cols);
-                assert(movableSub.n_rows == fixedSub.n_rows);
-                assert(movableSub.n_cols == fixedSub.n_cols);
+    auto calcSubmatrixes = [] (Image &fixed,
+                               Image &movable,
+                               ssize_t vertShift,
+                               ssize_t horShift) -> std::tuple<Image, Image> {
+        auto fixedSub = fixed.submatrix(vertShift,
+                                        horShift,
+                                        vertShift + fixed.n_rows,
+                                        horShift + fixed.n_cols);
+        auto movableSub = movable.submatrix(-vertShift,
+                                            -horShift,
+                                            -vertShift + movable.n_rows,
+                                            -horShift + movable.n_cols);
+        assert(fixedSub.n_rows == movableSub.n_rows);
+        assert(fixedSub.n_rows == movableSub.n_cols);
+        return {fixedSub, movableSub};
+    };
 
+
+    /// move g under r
+    auto fixed = img.r, movable = img.g;
+//    for (auto &movable : {img.b, img.g}) {
+    constexpr ssize_t shift = 15;
+    auto metricSquareMeanMin = std::numeric_limits<MetricType>::max();
+    auto metricCrossCorrelationMax = std::numeric_limits<MetricType>::min();
+    for (ssize_t horShift = -shift; horShift <= shift; horShift++) {
+        for (ssize_t vertShift = -shift; vertShift <= shift; vertShift++) {
+            std::tie(fixed, movable) = calcSubmatrixes(fixed, movable, vertShift, horShift);
+            auto metricSquareMean = squareMean(fixed, movable);
+            auto metricCrossCorrelation = crossCorrelation(fixed, movable);
+
+
+
+            /// move b under g and r
+            movable = img.b;
+            for (ssize_t horShiftt = -shift; horShiftt <= shift; horShiftt++) {
+                for (ssize_t vertShiftt = -shift; vertShiftt <= shift; vertShiftt++) {
+                    // FIXME: what if zero-sized image?
+                    // FIXME: there are non-same-sized images. Use min and max.
+                    // use here [-shift; shift] interval for simplicity
+                    std::tie(fixed, movable) = calcSubmatrixes(fixed, movable, vertShift, horShift);
+
+
+                    /// use multiplication for composition of 2 metrics
+                    metricSquareMean *= squareMean(fixed, movable);
+                    metricCrossCorrelation *= crossCorrelation(fixed, movable);
+                    if (metricSquareMean <= metricSquareMeanMin) {
+                        // store
+                    }
+                    if (metricCrossCorrelation >= metricCrossCorrelationMax) {
+                        // store
+                    }
+                }
             }
         }
     }

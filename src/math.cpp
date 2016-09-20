@@ -1,3 +1,6 @@
+#include <assert.h>
+#include "math.hpp"
+
 template <typename ResT, typename SrcT>
 ResT normalizeNumber(SrcT src,
                      ResT min=std::numeric_limits<ResT>::min(),
@@ -12,7 +15,7 @@ ResT normalizeNumber(SrcT src,
     return static_cast<ResT>(src);
 }
 
-uint64_t squareMean(Image img1, Image img2, size_t color1, size_t color2)
+MetricType squareMean(Image &img1, Image &img2, size_t color1=0, size_t color2=0)
 {
     size_t res = 0;
     for (size_t i = 0; i < img1.n_rows; i++) {
@@ -23,7 +26,7 @@ uint64_t squareMean(Image img1, Image img2, size_t color1, size_t color2)
     return res / (img1.n_cols * img2.n_cols);
 }
 
-uint64_t crossCorrelation(Image img1, Image img2, size_t color1, size_t color2)
+MetricType crossCorrelation(Image &img1, Image &img2, size_t color1=0, size_t color2=0)
 {
     size_t res = 0;
     for (size_t i = 0; i < img1.n_rows; i++) {
@@ -32,4 +35,24 @@ uint64_t crossCorrelation(Image img1, Image img2, size_t color1, size_t color2)
         }
     }
     return res;
+}
+
+std::tuple<MetricType, Image> calculateMetric(Image &fixed,
+                                             Image &movable,
+                                             ssize_t vertShift,
+                                             ssize_t horShift,
+                                             std::function<uint64_t(Image, Image, size_t, size_t)> &metric)
+{
+    auto fixedSub = fixed.submatrix(vertShift,
+                                    horShift,
+                                    vertShift + fixed.n_rows,
+                                    horShift + fixed.n_cols);
+    auto movableSub = movable.submatrix(-vertShift,
+                                        -horShift,
+                                        -vertShift + movable.n_rows,
+                                        -horShift + movable.n_cols);
+    assert(movableSub.n_rows == fixedSub.n_rows);
+    assert(movableSub.n_cols == fixedSub.n_cols);
+    // TODO: std::finction usage
+    return {fixedSub, metric(fixedSub, movableSub)};
 }
