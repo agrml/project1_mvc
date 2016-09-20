@@ -15,7 +15,10 @@ ResT normalizeNumber(SrcT src,
     return static_cast<ResT>(src);
 }
 
-MetricType squareMean(Image &img1, Image &img2, size_t color1=0, size_t color2=0)
+MetricType squareMean(const Image &img1,
+                      const Image &img2,
+                      size_t color1=0,
+                      size_t color2=0)
 {
     size_t res = 0;
     for (size_t i = 0; i < img1.n_rows; i++) {
@@ -26,7 +29,10 @@ MetricType squareMean(Image &img1, Image &img2, size_t color1=0, size_t color2=0
     return res / (img1.n_cols * img2.n_cols);
 }
 
-MetricType crossCorrelation(Image &img1, Image &img2, size_t color1=0, size_t color2=0)
+MetricType crossCorrelation(const Image &img1,
+                            const Image &img2,
+                            size_t color1=0,
+                            size_t color2=0)
 {
     size_t res = 0;
     for (size_t i = 0; i < img1.n_rows; i++) {
@@ -37,11 +43,11 @@ MetricType crossCorrelation(Image &img1, Image &img2, size_t color1=0, size_t co
     return res;
 }
 
-std::tuple<MetricType, Image> calculateMetric(Image &fixed,
-                                             Image &movable,
-                                             ssize_t vertShift,
-                                             ssize_t horShift,
-                                             std::function<uint64_t(Image, Image, size_t, size_t)> &metric)
+std::tuple<MetricType, Image> calculateMetric(const Image &fixed,
+                                              const Image &movable,
+                                              ssize_t vertShift,
+                                              ssize_t horShift,
+                                              std::function<uint64_t(Image, Image, size_t, size_t)> &metric)
 {
     auto fixedSub = fixed.submatrix(vertShift,
                                     horShift,

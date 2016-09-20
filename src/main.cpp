@@ -274,3 +274,9 @@ int main(int argc, char **argv)
 
     return 0;
 }
+
+/* Global TODO:
+ * убить запуск вьювера
+ * добавить math.hpp, cpp в make
+ * модифицированный matrix
+ * */

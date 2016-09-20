@@ -11,13 +11,19 @@ ResT normalizeNumber(SrcT src,
                      ResT max=std::numeric_limits<ResT>::max());
 
 /// assume same-sized immages
-MetricType squareMean(Image &img1, Image &img2, size_t color1=0, size_t color2=0);
+MetricType squareMean(const Image &img1,
+                      const Image &img2,
+                      size_t color1=0,
+                      size_t color2=0);
 
 /// assume same-sized immages
-MetricType crossCorrelation(Image &img1, Image &img2, size_t color1=0, size_t color2=0);
+MetricType crossCorrelation(const Image &img1,
+                            const Image &img2,
+                            size_t color1=0,
+                            size_t color2=0);
 
-std::tuple<MetricType, Image> calculateMetric(Image &fixed,
-                                              Image &movable,
+std::tuple<MetricType, Image> calculateMetric(const Image &fixed,
+                                              const Image &movable,
                                               ssize_t vertShift,
                                               ssize_t horShift,
                                               std::function<uint64_t(Image &, Image &, size_t, size_t)> &metric);

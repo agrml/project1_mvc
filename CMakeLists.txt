@@ -51,7 +51,7 @@ set(SOURCE_FILES
             src/main.cpp
             src/matrix_example.cpp
             src/math.cpp
-        )
+        src/MyMatrix.cpp src/MyMatrix.hpp)
 
 message("going to process subdirs...")
 #add_subdirectory(src)  # jump to subdir in search of an CMakeLists for it's processing. "process_subdirectory"

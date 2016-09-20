@@ -17,9 +17,17 @@ Image align(Image srcImage,
             bool isSubpixel,
             double subScale)
 {
+    constexpr ssize_t shiftLen = 15;
     struct Img
     {
         Image r{}, g{}, b{};
+    };
+
+    struct ShiftStorage
+    {
+        MetricType metric;
+        ssize_t horShift;
+        ssize_t vertShift;
     };
 
     Img img;
@@ -27,8 +35,8 @@ Image align(Image srcImage,
     img.g = srcImage.submatrix(srcImage.n_rows / 3, 0, srcImage.n_rows / 3, srcImage.n_cols);
     img.r = srcImage.submatrix(srcImage.n_rows / 3 * 2, 0, srcImage.n_rows / 3, srcImage.n_cols);
 
-    auto calcSubmatrixes = [] (Image &fixed,
-                               Image &movable,
+    auto calcSubmatrixes = [] (const Image &fixed,
+                               const Image &movable,
                                ssize_t vertShift,
                                ssize_t horShift) -> std::tuple<Image, Image> {
         auto fixedSub = fixed.submatrix(vertShift,
@@ -44,53 +52,49 @@ Image align(Image srcImage,
         return {fixedSub, movableSub};
     };
 
+    auto calcAlignmentForPair = [] (const Image &fixed, const Image &movable) {
+        ShiftStorage shiftStor{std::numeric_limits<MetricType>::max(), 0, 0};
+        for (ssize_t horShift = -shiftLen; horShift <= shiftLen; horShift++) {
+            for (ssize_t vertShift = -shiftLen; vertShift <= shiftLen; vertShift++) {
+                std::tie(fixed, movable) = calcSubmatrixes(fixed, movable, vertShift, horShift);
+                // FIXME: what if zero-sized image?
+                // FIXME: there are non-same-sized images. Use min and max.
 
-    /// move g under r
-    auto fixed = img.r, movable = img.g;
-//    for (auto &movable : {img.b, img.g}) {
-    constexpr ssize_t shift = 15;
-    auto metricSquareMeanMin = std::numeric_limits<MetricType>::max();
-    auto metricCrossCorrelationMax = std::numeric_limits<MetricType>::min();
-    for (ssize_t horShift = -shift; horShift <= shift; horShift++) {
-        for (ssize_t vertShift = -shift; vertShift <= shift; vertShift++) {
-            std::tie(fixed, movable) = calcSubmatrixes(fixed, movable, vertShift, horShift);
-            auto metricSquareMean = squareMean(fixed, movable);
-            auto metricCrossCorrelation = crossCorrelation(fixed, movable);
-
-
-
-            /// move b under g and r
-            movable = img.b;
-            for (ssize_t horShiftt = -shift; horShiftt <= shift; horShiftt++) {
-                for (ssize_t vertShiftt = -shift; vertShiftt <= shift; vertShiftt++) {
-                    // FIXME: what if zero-sized image?
-                    // FIXME: there are non-same-sized images. Use min and max.
-                    // use here [-shift; shift] interval for simplicity
-                    std::tie(fixed, movable) = calcSubmatrixes(fixed, movable, vertShift, horShift);
-
-
-                    /// use multiplication for composition of 2 metrics
-                    metricSquareMean *= squareMean(fixed, movable);
-                    metricCrossCorrelation *= crossCorrelation(fixed, movable);
-                    if (metricSquareMean <= metricSquareMeanMin) {
-                        // store
-                    }
-                    if (metricCrossCorrelation >= metricCrossCorrelationMax) {
-                        // store
-                    }
+                auto metric = squareMean(fixed, movable);
+                if (metric <= shiftStor.metric) {
+                    // store
+                    shiftStor.metric = metric;
+                    shiftStor.horShift = horShift;
+                    shiftStor.vertShift = vertShift;
                 }
             }
         }
-    }
+        return shiftStor;
+    };
 
+    /// calc
+    auto gAlignment = calcAlignmentForPair(img.r, img.g);
+    auto bAlignment = calcAlignmentForPair(img.r, img.b);
 
+    /// colorize
     for (size_t i = 0; i < img.r.n_rows; i++) {
         for (size_t j = 0; j < img.r.n_cols; j++) {
+            auto g = std::get<1>(img.g(i + gAlignment.vertShift, j + gAlignment.horShift));
             img.r(i, j) = std::make_tuple(std::get<0>(img.r(i, j)),
-                                          std::get<1>(img.g(i, j)),
-                                          std::get<2>(img.b(i, j)));
+                                          g,
+                                          b);
         }
     }
+
+    /// crop
+    uint8_t left = std::min({0, })
+
+
+
+
+
+
+
 
     return img.r;
 }
