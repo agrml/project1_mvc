@@ -5,6 +5,7 @@
 #include <initializer_list>
 #include <limits>
 #include <unistd.h>
+#include <ctime>
 
 #include "align.h"
 
@@ -265,6 +266,7 @@ int main(int argc, char **argv)
 
     // TODO: remove
     if (!fork()) {
+
         std::stringstream ss;
         constexpr size_t dst_idx = 2;
         ss << "eog -n " << argv[dst_idx];

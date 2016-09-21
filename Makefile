@@ -7,7 +7,9 @@ CXXFLAGS += -Werror -Wformat-security -Wignored-qualifiers -Winit-self \
 		-Wtype-limits -Wempty-body -Wlogical-op \
 		-Wmissing-field-initializers -Wctor-dtor-privacy \
 		-Wnon-virtual-dtor -Wstrict-null-sentinel -Wold-style-cast \
-		-Woverloaded-virtual -Wsign-promo -Weffc++
+		-Woverloaded-virtual -Wsign-promo -Weffc++ \
+		-Wno-unused-variable -Wno-unused-but-set-variable
+
 
 # Directories with source code
 SRC_DIR = src
@@ -77,7 +79,8 @@ bridge.touch: $(wildcard $(BRIDGE_INCLUDE_DIR)/*) \
 $(BIN_DIR)/matrix_example: $(OBJ_DIR)/matrix_example.o $(OBJ_DIR)/io.o bridge.touch
 	$(CXX) $(CXXFLAGS) $(filter %.o, $^) -o $@ $(LDFLAGS)
 
-$(BIN_DIR)/align: $(OBJ_DIR)/main.o $(OBJ_DIR)/io.o $(OBJ_DIR)/align.o bridge.touch
+# ADD NEW MODULES HERE
+$(BIN_DIR)/align: $(OBJ_DIR)/main.o $(OBJ_DIR)/io.o $(OBJ_DIR)/align.o $(OBJ_DIR)/MatrixMath.o bridge.touch
 	$(CXX) $(CXXFLAGS) $(filter %.o, $^) -o $@ $(LDFLAGS)
 
 # Pattern for generating dependency description files (*.d)

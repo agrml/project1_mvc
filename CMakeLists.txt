@@ -33,24 +33,22 @@ include_directories(
 )
 
 set(SOURCE_FILES
-#            externals/EasyBMP/include/EasyBMP.h
-#            externals/EasyBMP/include/EasyBMP_BMP.h
-#            externals/EasyBMP/include/EasyBMP_DataStructures.h
-#            externals/EasyBMP/include/EasyBMP_VariousBMPutilities.h
-#            externals/EasyBMP/src/EasyBMP.cpp
-#            externals/EasyBMP/BSD_revised_license.txt
-#            externals/EasyBMP/Makefile
+            externals/EasyBMP/include/EasyBMP.h
+            externals/EasyBMP/include/EasyBMP_BMP.h
+            externals/EasyBMP/include/EasyBMP_DataStructures.h
+            externals/EasyBMP/include/EasyBMP_VariousBMPutilities.h
+            externals/EasyBMP/src/EasyBMP.cpp
 
             include/align.h
             include/io.h
             include/matrix.h
         include/matrix.hpp
-        include/math.h
+        include/MatrixMath.hpp
             src/align.cpp
             src/io.cpp
             src/main.cpp
             src/matrix_example.cpp
-            src/math.cpp
+        src/MatrixMath.cpp
         )
 
 message("going to process subdirs...")

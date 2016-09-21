@@ -1,8 +1,3 @@
-//#pragma once
-
-//#include "matrix.h"
-//#include "math.hpp"
-
 template<typename ValueT>
 template<typename T>
 inline
@@ -141,8 +136,8 @@ Matrix<ValueT>::Matrix(Matrix &&src):
 template<typename ValueT>
 ValueT &Matrix<ValueT>::operator()(uint row, uint col)
 {
-//    if (row >= n_rows or col >= n_cols)
-//        throw std::string("Out of bounds");
+    if (row >= n_rows or col >= n_cols)
+        throw std::string("operator(): Out of bounds");
     row += pin_row;
     col += pin_col;
     return _data.get()[row * stride + col];
@@ -152,7 +147,7 @@ template<typename ValueT>
 const ValueT &Matrix<ValueT>::operator()(uint row, uint col) const
 {
     if (row >= n_rows or col >= n_cols)
-        throw std::string("Out of bounds");
+        throw std::string("operator(): Out of bounds");
     row += pin_row;
     col += pin_col;
     return _data.get()[row * stride + col];
@@ -163,17 +158,17 @@ Matrix<ValueT>::~Matrix()
 {}
 
 template<typename ValueT>
-const Matrix<ValueT> Matrix<ValueT>::submatrix(ssize_t prow, ssize_t pcol,
-                                               ssize_t rows, ssize_t cols) const
+const Matrix<ValueT> Matrix<ValueT>::submatrix(uint prow, uint pcol,
+                                               uint rows, uint cols) const
 {
-//    if (prow + rows > n_rows or pcol + cols > n_cols) {}
-//        throw std::string("Out of bounds");
+    if (prow + rows > n_rows or pcol + cols > n_cols)
+        throw std::string("submatrix: Out of bounds");
     // copying requested data to submatrix.
     Matrix<ValueT> tmp(*this);
-//    make_rw(tmp.n_rows) = norm(rows, this->n_rows);
-//    make_rw(tmp.n_cols) = norm(cols, this->n_cols);
-//    make_rw(tmp.pin_row) = norm(pin_row + prow, this->n_rows - 1);
-//    make_rw(tmp.pin_col) = norm(pin_col + pcol, this->n_cols - 1);
+    make_rw(tmp.n_rows) = rows;
+    make_rw(tmp.n_cols) = cols;
+    make_rw(tmp.pin_row) = pin_row + prow;
+    make_rw(tmp.pin_col) = pin_col + pcol;
     return tmp;
 }
 
