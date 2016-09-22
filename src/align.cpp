@@ -19,47 +19,51 @@ Image align(Image srcImage,
             bool isSubpixel,
             double subScale)
 {
-    constexpr ssize_t shiftLen = 15;
+
+    constexpr ssize_t MaxShiftLen = 15;
 
     struct Img
     {
         Image r{}, g{}, b{};
     };
 
-    /// split
+    // split
     Img img;
     auto step = srcImage.n_rows / 3;
     img.b = srcImage.submatrix(0, 0, step, srcImage.n_cols);
     img.g = srcImage.submatrix(step, 0, step, srcImage.n_cols);
     img.r = srcImage.submatrix(2 * step, 0, step, srcImage.n_cols);
 
-    /// calc
-    auto gAlignment = calcAlignmentForPair(img.r, img.g, 0);
-    auto bAlignment = calcAlignmentForPair(img.r, img.b, 0);
+    // calc
+    // fixme
+    auto gAlignment = calcAlignmentForPair(img.r, img.g, MaxShiftLen);
+    auto bAlignment = calcAlignmentForPair(img.r, img.b, MaxShiftLen);
 
-    /// colorize (red image -> RGB image)
+    // colorize (3 red images -> 1 RGB image)
+    assert(img.r.n_cols == img.g.n_cols && img.g.n_cols == img.b.n_cols);
+    assert(img.r.n_rows == img.g.n_rows && img.g.n_rows == img.b.n_rows);
     for (size_t i = 0; i < img.r.n_rows; i++) {
         for (size_t j = 0; j < img.r.n_cols; j++) {
-            auto g = std::get<0>(img.g(norm(i - gAlignment.vertShift, img.g.n_cols - 1),
-                                       norm(j - gAlignment.horShift, img.g.n_rows - 1)));
-            auto b = std::get<0>(img.b(norm(i - bAlignment.vertShift, img.b.n_cols - 1),
-                                       norm(j - bAlignment.horShift, img.b.n_rows - 1)));
+            auto g = std::get<0>(img.g(norm(i - gAlignment.vertShift, img.r.n_rows - 1),
+                                       norm(j - gAlignment.horShift, img.r.n_cols - 1)));
+            auto b = std::get<0>(img.b(norm(i - bAlignment.vertShift, img.r.n_rows - 1),
+                                       norm(j - bAlignment.horShift, img.r.n_cols - 1)));
             img.r(i, j) = std::make_tuple(std::get<0>(img.r(i, j)),
                                           g,
                                           b);
         }
     }
 
-    /// crop
+    // crop
     auto row = std::max({ssize_t(0), gAlignment.vertShift, bAlignment.vertShift});
     auto col = std::max({ssize_t(0), gAlignment.horShift, bAlignment.horShift});
-    auto rows = std::min({ssize_t(img.r.n_rows),
+    auto rows = std::min({ssize_t(img.r.n_rows - row),
                             img.r.n_rows + gAlignment.vertShift,
                             img.r.n_rows + bAlignment.vertShift});
-    auto cols = std::min({ssize_t(img.r.n_cols),
+    auto cols = std::min({ssize_t(img.r.n_cols - col),
                           img.r.n_cols + gAlignment.horShift,
                           img.r.n_cols + bAlignment.horShift});
-    return getSubmatrix(img.r, row, col, rows, cols);
+    return img.r.submatrix(row, col, rows, cols);
 }
 
 Image sobel_x(Image src_image) {
