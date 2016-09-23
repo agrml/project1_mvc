@@ -281,4 +281,6 @@ int main(int argc, char **argv)
  * убить запуск вьювера
  * добавить math.hpp, cpp в make
  * модифицированный matrix
+ *
+ * Image -> const Image &
  * */

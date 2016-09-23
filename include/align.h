@@ -22,6 +22,10 @@ Image gray_world(Image src_image);
 
 Image resize(Image src_image, double scale);
 
+// Function custom is useful for making concrete linear filtrations
+// like gaussian or sobel. So, we assume that you implement custom
+// and then implement other filtrations using this function.
+// sobel_x and sobel_y are given as an example.
 Image custom(Image src_image, Matrix<double> kernel);
 
 Image autocontrast(Image src_image, double fraction);

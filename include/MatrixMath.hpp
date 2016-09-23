@@ -46,3 +46,27 @@ std::tuple<Image, Image> calcSubimages(const Image &fixed,
                                        const Image &movable,
                                        ssize_t vertShift,
                                        ssize_t horShift);
+
+/// matrix operator for unary_map method
+class ImageOp
+{
+public:
+    uint radius = 0;
+    virtual std::tuple<uint, uint, uint> operator()(const Image &neighbourhood) const = 0;
+    virtual ~ImageOp() {};
+};
+
+using BrightnessType = double;
+
+struct Brightness
+{
+    BrightnessType r=0, g=0, b=0;
+};
+
+class GrayWorldOp : public ImageOp
+{
+    Brightness coefs_;
+public:
+    GrayWorldOp(const Brightness &br);
+    std::tuple<uint, uint, uint> operator()(const Image &neighbourhood) const override;
+};

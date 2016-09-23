@@ -19,7 +19,6 @@ Image align(Image srcImage,
             bool isSubpixel,
             double subScale)
 {
-
     constexpr ssize_t MaxShiftLen = 15;
 
     struct Img
@@ -63,7 +62,15 @@ Image align(Image srcImage,
     auto cols = std::min({ssize_t(img.r.n_cols - col),
                           img.r.n_cols + gAlignment.horShift,
                           img.r.n_cols + bAlignment.horShift});
-    return img.r.submatrix(row, col, rows, cols);
+    auto ans = img.r.submatrix(row, col, rows, cols);
+
+    // postprocessing
+    if (isPostprocessing) {
+        if (postprocessingType == "--gray-world") {
+            return gray_world(ans);
+        }
+    }
+    return ans;
 }
 
 Image sobel_x(Image src_image) {
@@ -84,21 +91,45 @@ Image unsharp(Image src_image) {
     return src_image;
 }
 
-Image gray_world(Image src_image) {
-    return src_image;
+Image gray_world(Image src_image)
+{
+    Brightness br{};
+    // fixme: возможго слишком мощное округление при делении
+    auto sz = src_image.n_cols * src_image.n_rows;
+    for (size_t i = 0; i < src_image.n_rows; i++) {
+        for (size_t j = 0; j < src_image.n_cols; j++) {
+            Brightness tmp;
+            std::tie(tmp.r, tmp.g, tmp.b) = src_image(i, j);
+            br.r += tmp.r / sz;
+            br.g += tmp.g / sz;
+            br.b += tmp.b / sz;
+        }
+    }
+    BrightnessType mean = (br.r + br.g + br.b) / 3;
+    // FIXME: possible zero division error
+    br.r = mean / br.r;
+    br.g = mean / br.g;
+    br.b = mean / br.b;
+    return src_image.unary_map(GrayWorldOp{br});
 }
 
 Image resize(Image src_image, double scale) {
     return src_image;
 }
 
-Image custom(Image src_image, Matrix<double> kernel) {
-    // Function custom is useful for making concrete linear filtrations
-    // like gaussian or sobel. So, we assume that you implement custom
-    // and then implement other filtrations using this function.
-    // sobel_x and sobel_y are given as an example.
-    return src_image;
-}
+//Image custom(Image src_image, Matrix<double> kernel)
+//{
+//    // TODO: use unary map method
+//
+//    assert(kernel.n_rows == kernel.n_cols);
+////    auto r = kernel.n_rows;
+////    for (size_t i = 0; i < src_image.n_rows; i++) {
+////        for (size_t j = 0; j < src_image.n_cols; j++) {
+////            src_image(i, j) = src_image
+////        }
+////    }
+//    return );
+//}
 
 Image autocontrast(Image src_image, double fraction) {
     return src_image;

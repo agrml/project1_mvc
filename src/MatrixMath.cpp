@@ -127,3 +127,13 @@ std::tuple<Image, Image> calcSubimages(const Image &fixed,
     assert(fixedSub.n_rows == movableSub.n_rows);
     return std::tuple<Image, Image>{fixedSub, movableSub};
 }
+
+std::tuple<uint, uint, uint> GrayWorldOp::operator()(const Image &neighbourhood) const
+{
+    auto cell = neighbourhood(0, 0);
+    return std::make_tuple(uint(std::get<0>(cell) * coefs_.r),
+                           uint(std::get<1>(cell) * coefs_.g),
+                           uint(std::get<2>(cell) * coefs_.b));
+}
+
+GrayWorldOp::GrayWorldOp(const Brightness &br) : coefs_(br), radius(0) {}
