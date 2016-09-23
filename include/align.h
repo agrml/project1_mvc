@@ -5,10 +5,10 @@
 
 // implemented
 Image align(Image srcImage,
-            bool isPostprocessing,
-            std::string postprocessingType,
+            bool isPostprocessing,  // implemented
+            std::string postprocessingType,  // implemented
             double fraction,
-            bool isMirror,
+            bool isMirror,  // implemented
             bool isInterp,
             bool isSubpixel,
             double subScale);

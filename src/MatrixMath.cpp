@@ -117,8 +117,20 @@ std::tuple<Image, Image> calcSubimages(const Image &fixed,
 Image mirror(const Image &src, uint radius)
 {
     Image ans{src.n_rows + 2 * radius, src.n_cols + 2 * radius};
-
-    return Image();
+    for (uint i = 0; i < ans.n_rows; i++) {
+        for (uint j = 0; j < ans.n_cols; j++) {
+            long x = std::abs(long(i) - radius);
+            long y = std::abs(long(j) - radius);
+            if (x >= long(src.n_rows)) {
+                x = src.n_rows - (x - src.n_rows) - 1;
+            }
+            if (y >= long(src.n_cols)) {
+                y = src.n_cols - (y - src.n_cols) - 1;
+            }
+            ans(i, j) = src(x, y);
+        }
+    }
+    return ans;
 }
 
 

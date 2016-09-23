@@ -63,20 +63,24 @@ Image align(Image srcImage,
                           img.r.n_cols + bAlignment.horShift});
     auto ans = img.r.submatrix(row, col, rows, cols);
 
-    constexpr size_t unsharpMirrorLen = 2;
+    constexpr uint unsharpMirrorLen = 2;
     // postprocessing
     if (isPostprocessing) {
         if (postprocessingType == "--gray-world") {
             return gray_world(ans);
         }
         if (postprocessingType == "--unsharp") {
-            if (isMirror) {
+            bool flag = isMirror && unsharpMirrorLen <= ans.n_cols && unsharpMirrorLen <= ans.n_rows;
+            if (flag) {
                 // fixme: is allignment correct?
                 ans = mirror(ans, unsharpMirrorLen);
             }
             ans = unsharp(ans);
-            if (isMirror) {
-                ans = unmirror(ans, unsharpMirrorLen);
+            if (flag) {
+                ans = ans.submatrix(unsharpMirrorLen,
+                                    unsharpMirrorLen,
+                                    ans.n_rows - 2 * unsharpMirrorLen,
+                                    ans.n_cols - 2 * unsharpMirrorLen);
             }
             return ans;
         }
