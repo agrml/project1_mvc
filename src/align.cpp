@@ -34,7 +34,6 @@ Image align(Image srcImage,
     img.r = srcImage.submatrix(2 * step, 0, step, srcImage.n_cols);
 
     // calc
-    // fixme
     auto gAlignment = calcAlignmentForPair(img.r, img.g, MaxShiftLen);
     auto bAlignment = calcAlignmentForPair(img.r, img.b, MaxShiftLen);
 
@@ -64,10 +63,22 @@ Image align(Image srcImage,
                           img.r.n_cols + bAlignment.horShift});
     auto ans = img.r.submatrix(row, col, rows, cols);
 
+    constexpr size_t unsharpMirrorLen = 2;
     // postprocessing
     if (isPostprocessing) {
         if (postprocessingType == "--gray-world") {
             return gray_world(ans);
+        }
+        if (postprocessingType == "--unsharp") {
+            if (isMirror) {
+                // fixme: is allignment correct?
+                ans = mirror(ans, unsharpMirrorLen);
+            }
+            ans = unsharp(ans);
+            if (isMirror) {
+                ans = unmirror(ans, unsharpMirrorLen);
+            }
+            return ans;
         }
     }
     return ans;
@@ -87,13 +98,27 @@ Image sobel_y(Image src_image) {
     return custom(src_image, kernel);
 }
 
-Image unsharp(Image src_image) {
-    return src_image;
+Image unsharp(Image src_image)
+{
+    double one = 1;
+    Matrix<double> kernel{{-one / 6, -2 * one / 3, -one / 6},
+                          {-2 * one / 3, 13 * one / 3, -2 * one / 3},
+                          {-one / 6, -2 * one / 3, -one / 6}};
+    return custom(src_image, kernel);
 }
 
 Image gray_world(Image src_image)
 {
+    using BrightnessType = double;
+
+    struct Brightness
+    {
+        BrightnessType r=0, g=0, b=0;
+    };
+
     Brightness br{};
+
+    // calculate coefficients
     // fixme: возможго слишком мощное округление при делении
     auto sz = src_image.n_cols * src_image.n_rows;
     for (size_t i = 0; i < src_image.n_rows; i++) {
@@ -110,26 +135,32 @@ Image gray_world(Image src_image)
     br.r = mean / br.r;
     br.g = mean / br.g;
     br.b = mean / br.b;
-    return src_image.unary_map(GrayWorldOp{br});
+
+    // get images
+    auto r = custom(src_image, Matrix<double>{br.r});
+    auto g = custom(src_image, Matrix<double>{br.g});
+    auto b = custom(src_image, Matrix<double>{br.b});
+
+    // transform to 1 image
+    for (size_t i = 0; i < src_image.n_rows; i++) {
+        for (size_t j = 0; j < src_image.n_cols; j++) {
+            r(i, j) = std::make_tuple(std::get<0>(r(i, j)),
+                                      std::get<1>(g(i, j)),
+                                      std::get<2>(b(i, j)));
+        }
+    }
+    return r;
 }
 
 Image resize(Image src_image, double scale) {
     return src_image;
 }
 
-//Image custom(Image src_image, Matrix<double> kernel)
-//{
-//    // TODO: use unary map method
-//
-//    assert(kernel.n_rows == kernel.n_cols);
-////    auto r = kernel.n_rows;
-////    for (size_t i = 0; i < src_image.n_rows; i++) {
-////        for (size_t j = 0; j < src_image.n_cols; j++) {
-////            src_image(i, j) = src_image
-////        }
-////    }
-//    return );
-//}
+Image custom(Image src_image, Matrix<double> kernel)
+{
+    assert(kernel.n_rows == kernel.n_cols);
+    return src_image.unary_map(ConvolutionOp{kernel});
+}
 
 Image autocontrast(Image src_image, double fraction) {
     return src_image;

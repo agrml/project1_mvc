@@ -8,8 +8,7 @@ ResT normalizeNumber(SrcT src,
                      ResT min=std::numeric_limits<ResT>::min(),
                      ResT max=std::numeric_limits<ResT>::max());
 
-// fixme: shit on zero-sized matrix
-// Q: определяют же in-place! Потом и не должно собираться?
+// fixme: определяют же in-place! Потом и не должно собираться?
 uint norm (ssize_t idx, int n);
 
 
@@ -26,12 +25,6 @@ MetricType squareMean(const Image &img1,
 MetricType crossCorrelation(const Image &img1,
                             const Image &img2);
 
-//Image getSubmatrix(const Image &src,
-//                    ssize_t vertShift,
-//                    ssize_t horShift,
-//                    ssize_t vertLen,
-//                    ssize_t horLen);
-
 struct ShiftStorage
 {
     MetricType metric;
@@ -47,26 +40,13 @@ std::tuple<Image, Image> calcSubimages(const Image &fixed,
                                        ssize_t vertShift,
                                        ssize_t horShift);
 
-/// matrix operator for unary_map method
-class ImageOp
+class ConvolutionOp
 {
+    Matrix<double> kernel_;
 public:
     uint radius = 0;
-    virtual std::tuple<uint, uint, uint> operator()(const Image &neighbourhood) const = 0;
-    virtual ~ImageOp() {};
+    ConvolutionOp(const Matrix<double> &kernel);
+    std::tuple<uint, uint, uint> operator()(const Image &neighbourhood) const;
 };
 
-using BrightnessType = double;
-
-struct Brightness
-{
-    BrightnessType r=0, g=0, b=0;
-};
-
-class GrayWorldOp : public ImageOp
-{
-    Brightness coefs_;
-public:
-    GrayWorldOp(const Brightness &br);
-    std::tuple<uint, uint, uint> operator()(const Image &neighbourhood) const override;
-};
+Image mirror(const Image &src, uint radius);

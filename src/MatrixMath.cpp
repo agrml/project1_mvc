@@ -19,7 +19,6 @@ ResT normalizeNumber(SrcT src,
     return static_cast<ResT>(src);
 }
 
-// fixme: shit on zero-sized matrix
 // Q: определяют же in-place! Потом и не должно собираться?
 uint norm(ssize_t idx, int n)
 {
@@ -51,19 +50,6 @@ MetricType crossCorrelation(const Image &img1,
     }
     return res;
 }
-
-//Image getsubmatrix(const Image &src,
-//                    ssize_t vertShift,
-//                    ssize_t horShift,
-//                    ssize_t vertLen,
-//                    ssize_t horLen)
-//{
-//    return src.submatrix(norm(vertShift, src.n_rows - 1),
-//                         norm(horShift, src.n_cols - 1),
-//                         norm(vertLen, src.n_rows - 1 - vertShift),
-//                         norm(horLen, src.n_cols - 1 - horShift));
-//
-//}
 
 ShiftStorage calcAlignmentForPair(const Image &fixed,
                                   const Image &movable,
@@ -128,12 +114,33 @@ std::tuple<Image, Image> calcSubimages(const Image &fixed,
     return std::tuple<Image, Image>{fixedSub, movableSub};
 }
 
-std::tuple<uint, uint, uint> GrayWorldOp::operator()(const Image &neighbourhood) const
+Image mirror(const Image &src, uint radius)
 {
-    auto cell = neighbourhood(0, 0);
-    return std::make_tuple(uint(std::get<0>(cell) * coefs_.r),
-                           uint(std::get<1>(cell) * coefs_.g),
-                           uint(std::get<2>(cell) * coefs_.b));
+    Image ans{src.n_rows + 2 * radius, src.n_cols + 2 * radius};
+
+    return Image();
 }
 
-GrayWorldOp::GrayWorldOp(const Brightness &br) : coefs_(br), radius(0) {}
+
+ConvolutionOp::ConvolutionOp(const Matrix<double> &kernel) : kernel_(kernel), radius(kernel.n_rows) {}
+
+std::tuple<uint, uint, uint> ConvolutionOp::operator()(const Image &neighbourhood) const
+{
+    // matrices "multiplication"
+    assert(neighbourhood.n_cols == neighbourhood.n_rows);
+    assert(radius == (neighbourhood.n_cols - 1) / 2);
+
+    double r = 0, g = 0, b = 0;
+    double sum_r = 0, sum_g = 0, sum_b = 0;
+    for (size_t i = 0; i < radius; i++) {
+        for (size_t j = 0; j < radius; j++) {
+            std::tie(r, g, b) = neighbourhood(i, j);
+            sum_r += r * kernel_(i, j);
+            sum_g += g * kernel_(i, j);
+            sum_b += b * kernel_(i, j);
+        }
+    }
+    return std::make_tuple(normalizeNumber(sum_r, uint8_t(0), std::numeric_limits<uint8_t>::max()),
+                           normalizeNumber(sum_g, uint8_t(0), std::numeric_limits<uint8_t>::max()),
+                           normalizeNumber(sum_b, uint8_t(0), std::numeric_limits<uint8_t>::max()));
+}

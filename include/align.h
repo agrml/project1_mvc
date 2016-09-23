@@ -3,6 +3,7 @@
 #include "io.h"
 #include "matrix.h"
 
+// implemented
 Image align(Image srcImage,
             bool isPostprocessing,
             std::string postprocessingType,
@@ -16,8 +17,10 @@ Image sobel_x(Image src_image);
 
 Image sobel_y(Image src_image);
 
+// implemented
 Image unsharp(Image src_image);
 
+// implemented
 Image gray_world(Image src_image);
 
 Image resize(Image src_image, double scale);
@@ -26,6 +29,9 @@ Image resize(Image src_image, double scale);
 // like gaussian or sobel. So, we assume that you implement custom
 // and then implement other filtrations using this function.
 // sobel_x and sobel_y are given as an example.
+
+// implemented
+// semantic name: convolution filter
 Image custom(Image src_image, Matrix<double> kernel);
 
 Image autocontrast(Image src_image, double fraction);
