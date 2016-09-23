@@ -8,7 +8,6 @@ ResT normalizeNumber(SrcT src,
                      ResT min=std::numeric_limits<ResT>::min(),
                      ResT max=std::numeric_limits<ResT>::max());
 
-// fixme: определяют же in-place! Потом и не должно собираться?
 uint norm (ssize_t idx, int n);
 
 
@@ -50,3 +49,11 @@ public:
 };
 
 Image mirror(const Image &src, uint radius);
+
+class MedianOp
+{
+public:
+    uint radius = 0;
+    MedianOp(const Matrix<double> &kernel);
+    std::tuple<uint, uint, uint> operator()(const Image &neighbourhood) const;
+};

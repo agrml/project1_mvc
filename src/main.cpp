@@ -263,24 +263,5 @@ int main(int argc, char **argv)
         cerr << "For help type: " << endl << argv[0] << " --help" << endl;
         return 1;
     }
-
-    // TODO: remove
-    if (!fork()) {
-
-        std::stringstream ss;
-        constexpr size_t dst_idx = 2;
-        ss << "eog -n " << argv[dst_idx];
-        if (!std::system(ss.str().c_str())) {}
-        return 0;
-    }
-
     return 0;
 }
-
-/* Global TODO:
- * убить запуск вьювера
- * добавить math.hpp, cpp в make
- * модифицированный matrix
- *
- * Image -> const Image &
- * */

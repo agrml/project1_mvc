@@ -72,7 +72,6 @@ Image align(Image srcImage,
         if (postprocessingType == "--unsharp") {
             bool flag = isMirror && unsharpMirrorLen <= ans.n_cols && unsharpMirrorLen <= ans.n_rows;
             if (flag) {
-                // fixme: is allignment correct?
                 ans = mirror(ans, unsharpMirrorLen);
             }
             ans = unsharp(ans);
@@ -178,8 +177,9 @@ Image gaussian_separable(Image src_image, double sigma, int radius) {
     return src_image;
 }
 
-Image median(Image src_image, int radius) {
-    return src_image;
+Image median(Image src_image, int radius)
+{
+    return src_image.unary_map(MedianOp{uint(radius)});
 }
 
 Image median_linear(Image src_image, int radius) {

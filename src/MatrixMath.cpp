@@ -156,3 +156,25 @@ std::tuple<uint, uint, uint> ConvolutionOp::operator()(const Image &neighbourhoo
                            normalizeNumber(sum_g, uint8_t(0), std::numeric_limits<uint8_t>::max()),
                            normalizeNumber(sum_b, uint8_t(0), std::numeric_limits<uint8_t>::max()));
 }
+
+MedianOp::MedianOp(const Matrix<double> &kernel) : radius(kernel.n_rows) {}
+
+std::tuple<uint, uint, uint> MedianOp::operator()(const Image &neighbourhood) const
+{
+    uint r = 0, g = 0, b = 0;
+    std::vector<uint> v_r, v_g, v_b;
+    for (size_t i = 0; i < radius; i++) {
+        for (size_t j = 0; j < radius; j++) {
+            std::tie(r, g, b) = neighbourhood(i, j);
+            v_r.push_back(r);
+            v_g.push_back(g);
+            v_b.push_back(b);
+        }
+    }
+    std::nth_element(v_r.begin(), v_r.begin() + v_r.size()/2, v_r.end());
+    std::nth_element(v_g.begin(), v_g.begin() + v_g.size()/2, v_g.end());
+    std::nth_element(v_b.begin(), v_b.begin() + v_b.size()/2, v_b.end());
+    return std::make_tuple(v_r[v_r.size()/2],
+                           v_g[v_g.size()/2],
+                           v_b[v_b.size()/2]);
+}
