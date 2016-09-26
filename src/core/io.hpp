@@ -1,6 +1,6 @@
 #pragma once
 
-#include "matrix.h"
+#include "matrix.hpp"
 #include "EasyBMP.h"
 
 #include <tuple>

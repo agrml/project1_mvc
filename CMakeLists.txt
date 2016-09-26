@@ -9,12 +9,14 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Wformat-security -Wignored-qual
 		-Wtype-limits -Wempty-body -Wlogical-op \
 		-Wmissing-field-initializers -Wctor-dtor-privacy \
 		-Wnon-virtual-dtor -Wstrict-null-sentinel -Wold-style-cast \
-		-Woverloaded-virtual -Wsign-promo -Weffc++")
+		-Woverloaded-virtual -Wsign-promo -Weffc++
 
-set(PROJECT_SOURCE_DIR src:include)  # : instead of whitespace
-set(BUILD_DIR build)
+        -Wno-unused-variable -Wno-unused-but-set-variable")
+
+set(PROJECT_SOURCE_DIR src)  # for "src:include": ":" instead of whitespace
+set(PROJECT_BUILD_DIR build)
 #OBJ_DIR = $(BUILD_DIR)/obj
-set(BIN_DIR $(BUILD_DIR)/bin)
+set(PROJECT_BINARY_DIR $(PROJECT_BUILD_DIR)/bin)
 #DEP_DIR = $(BUILD_DIR)/deps  # dependences (automaticly recompile project if a .hh chenged)
 set(PROJECT_LIB_DIR externals)
 
@@ -39,22 +41,26 @@ set(SOURCE_FILES
             externals/EasyBMP/include/EasyBMP_VariousBMPutilities.h
             externals/EasyBMP/src/EasyBMP.cpp
 
-            include/align.h
-            include/io.h
-            include/matrix.h
-        include/matrix.hpp
-        include/MatrixMath.hpp
-            src/align.cpp
-            src/io.cpp
-            src/main.cpp
-            src/matrix_example.cpp
-        src/MatrixMath.cpp
+        src/core/align.hpp
+        src/core/io.hpp
+        src/core/matrix.hpp
+        src/core/matrix.cpp
+        src/core/MatrixMath.hpp
+        src/core/align.cpp
+        src/core/io.cpp
+        src/core/main.cpp
+        src/core/matrix_example.cpp
+        src/core/MatrixMath.cpp
         )
 
 message("going to process subdirs...")
 #add_subdirectory(src)  # jump to subdir in search of an CMakeLists for it's processing. "process_subdirectory"
+
 #add_subdirectory(externals)
+add_custom_target(align_project COMMAND make -C ${PROJECT_SOURCE_DIR}/externals/EasyBMP
+        CLION_EXE_DIR=${PROJECT_BINARY_DIR})
 
 add_executable(align_project ${SOURCE_FILES}) # создание цели сборки, зависящей от таких-то файлов?
 
+# LDFLAGS = -leasybmp
 

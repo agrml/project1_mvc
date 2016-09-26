@@ -7,7 +7,7 @@
 #include <unistd.h>
 #include <ctime>
 
-#include "align.h"
+#include "align.hpp"
 
 using std::string;
 using std::stringstream;

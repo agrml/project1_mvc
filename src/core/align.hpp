@@ -1,7 +1,7 @@
 #pragma once
 
-#include "io.h"
-#include "matrix.h"
+#include "io.hpp"
+#include "matrix.hpp"
 
 // implemented
 Image align(Image srcImage,
