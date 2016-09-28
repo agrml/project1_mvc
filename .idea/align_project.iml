@@ -2,22 +2,8 @@
 <module type="CPP_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/externals/EasyBMP/src/EasyBMP.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/externals/EasyBMP/include/EasyBMP.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/externals/EasyBMP/include/EasyBMP_BMP.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/externals/EasyBMP/include/EasyBMP_VariousBMPutilities.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/externals/EasyBMP/include/EasyBMP_DataStructures.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/core/io.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/core/MatrixMath.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/core/main.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/core/matrix_example.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/core/align.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/core/matrix.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/core/matrix.hpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/core/align.hpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/core/io.hpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/core/MatrixMath.hpp" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
       <excludeFolder url="file://$MODULE_DIR$/local" />
     </content>
@@ -25,15 +11,17 @@
     <orderEntry type="module-library">
       <library name="Header Search Paths">
         <CLASSES>
+          <root url="file://$MODULE_DIR$/externals" />
+          <root url="file:///usr/include" />
           <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include-fixed" />
           <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include" />
-          <root url="file:///usr/include" />
           <root url="file:///usr/local/include" />
         </CLASSES>
         <SOURCES>
+          <root url="file://$MODULE_DIR$/externals" />
+          <root url="file:///usr/include" />
           <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include-fixed" />
           <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include" />
-          <root url="file:///usr/include" />
           <root url="file:///usr/local/include" />
         </SOURCES>
       </library>

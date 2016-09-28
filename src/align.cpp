@@ -5,19 +5,7 @@
 #include "MatrixMath.hpp"
 
 
-using std::string;
-using std::cout;
-using std::endl;
-
-
-Image align(Image srcImage,
-            bool isPostprocessing,
-            std::string postprocessingType,
-            double fraction,
-            bool isMirror,
-            bool isInterp,
-            bool isSubpixel,
-            double subScale)
+Image align(Image srcImage, bool isPostprocessing, std::string postprocessingType, bool isInterp, bool isMirror)
 {
     constexpr ssize_t MaxShiftLen = 15;
 
@@ -87,20 +75,6 @@ Image align(Image srcImage,
     return ans;
 }
 
-Image sobel_x(Image src_image) {
-    Matrix<double> kernel = {{-1, 0, 1},
-                             {-2, 0, 2},
-                             {-1, 0, 1}};
-    return custom(src_image, kernel);
-}
-
-Image sobel_y(Image src_image) {
-    Matrix<double> kernel = {{ 1,  2,  1},
-                             { 0,  0,  0},
-                             {-1, -2, -1}};
-    return custom(src_image, kernel);
-}
-
 Image unsharp(Image src_image)
 {
     double one = 1;
@@ -155,41 +129,14 @@ Image gray_world(Image src_image)
     return r;
 }
 
-Image resize(Image src_image, double scale) {
-    return src_image;
-}
-
 Image custom(Image src_image, Matrix<double> kernel)
 {
     assert(kernel.n_rows == kernel.n_cols);
     return src_image.unary_map(ConvolutionOp{kernel});
 }
 
-Image autocontrast(Image src_image, double fraction) {
-    return src_image;
-}
-
-Image gaussian(Image src_image, double sigma, int radius)  {
-    return src_image;
-}
-
-Image gaussian_separable(Image src_image, double sigma, int radius) {
-    return src_image;
-}
 
 Image median(Image src_image, int radius)
 {
     return src_image.unary_map(MedianOp{uint(radius)});
-}
-
-Image median_linear(Image src_image, int radius) {
-    return src_image;
-}
-
-Image median_const(Image src_image, int radius) {
-    return src_image;
-}
-
-Image canny(Image src_image, int threshold1, int threshold2) {
-    return src_image;
 }
