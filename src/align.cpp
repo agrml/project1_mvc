@@ -5,7 +5,10 @@
 #include "MatrixMath.hpp"
 
 
-Image align(Image srcImage, bool isPostprocessing, std::string postprocessingType, bool isInterp, bool isMirror)
+Image align(Image srcImage,
+            bool isPostprocessing,
+            std::string postprocessingType,
+            bool isMirror)
 {
     constexpr ssize_t MaxShiftLen = 15;
 
@@ -54,10 +57,10 @@ Image align(Image srcImage, bool isPostprocessing, std::string postprocessingTyp
     constexpr uint unsharpMirrorLen = 2;
     // postprocessing
     if (isPostprocessing) {
-        if (postprocessingType == "--gray-world") {
+        if (postprocessingType == "gray-world") {
             return gray_world(ans);
         }
-        if (postprocessingType == "--unsharp") {
+        if (postprocessingType == "unsharp") {
             bool flag = isMirror && unsharpMirrorLen <= ans.n_cols && unsharpMirrorLen <= ans.n_rows;
             if (flag) {
                 ans = mirror(ans, unsharpMirrorLen);

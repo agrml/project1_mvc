@@ -1,14 +1,14 @@
 set(SOURCE_FILES
         main.cpp
 
-#        align.cpp
-#        io.cpp
-#        matrix.cpp
-#        MatrixMath.cpp
-#
-#        model.cpp
-#        view.cpp
-#        controller.cpp
+        align.cpp
+        io.cpp
+        matrix.cpp
+        MatrixMath.cpp
+
+        model.cpp
+        view.cpp
+        controller.cpp
         )
 
 

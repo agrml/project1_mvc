@@ -6,7 +6,6 @@
 Image align(Image srcImage,
             bool isPostprocessing,
             std::string postprocessingType,
-            bool isInterp,
             bool isMirror);
 
 Image unsharp(Image src_image);

@@ -145,6 +145,3 @@ std::ostream &operator << (std::ostream &out, const Matrix<ValueT> &m)
     }
     return out;
 }
-
-// Implementation of Matrix class
-#include "matrix.cpp"

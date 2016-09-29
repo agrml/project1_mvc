@@ -5,10 +5,11 @@
 
 class Controller
 {
-    Model model_;
-    View view_;
+    Model &model_;
+    View &view_;
 public:
-    Controller(Model &model, View &view) :
+    Controller(Model *model, View *view);
     void run();
-    OptionsType evalOptions(OptionsType &options);
+    void processOptions(OptionsType &options);
+
 };
