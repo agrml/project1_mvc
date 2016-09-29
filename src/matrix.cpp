@@ -1,3 +1,5 @@
+#include "matrix.hpp"
+
 template<typename ValueT>
 template<typename T>
 inline

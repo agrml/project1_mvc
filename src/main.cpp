@@ -15,9 +15,10 @@
 
 int main(int argc, char *argv[])
 {
-    // parse agrv
-//    if (argc != ...) ...
-    std::string param{argv[argc]};
+    // parse argv
+    if (argc != 2) {
+        throw std::string{"Expect 1 command line argument, "} + std::to_string(argc - 1) + "given.";
+    }
 // todo: place them all on the heap: there is no one function (stack frame) prioritized in use of them
 //    // init view
 //    View *view;
