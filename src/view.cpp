@@ -57,7 +57,7 @@ void CliView::output(const Image &res)
         std::stringstream ss;
         save_image(res, path.c_str());
         ss << "xdg-open " << path;
-        std::system(ss.str().c_str());
+        if (std::system(ss.str().c_str())) {};
     }
 }
 

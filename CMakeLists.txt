@@ -8,8 +8,13 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Wformat-security -Wignored-qual
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-variable -Wno-unused-but-set-variable")
 
 # assume that EasyBMP has already been built
-include_directories(${CMAKE_SOURCE_DIR}/lib/EasyBMP/include)
-#link_directories(${CMAKE_SOURCE_DIR}/lib/EasyBMP)
+include_directories(
+        ${CMAKE_SOURCE_DIR}/src
+        ${CMAKE_SOURCE_DIR}/lib/EasyBMP/include)
+# fixme?  ${CMAKE_BINARY_DIR}/prefix/include
+# no. because we build easybmp in-source
+
+link_directories(${CMAKE_SOURCE_DIR}/lib/EasyBMP/lib)
 
 #find_package(EasyBMP)
 #if(${EasyBMP_FOUND} EQUAL 1)
