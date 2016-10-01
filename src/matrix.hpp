@@ -10,6 +10,7 @@
 
 typedef unsigned int uint;
 
+
 template<typename ValueT>
 class Matrix
 {
@@ -145,3 +146,9 @@ std::ostream &operator << (std::ostream &out, const Matrix<ValueT> &m)
     }
     return out;
 }
+
+// We go that non-intuitive way because of c++ templates specific.
+// If we'll compile matrix.cpp alone and link it after, linking will not be successful,
+// because stand-alone .cpp knows nothing about concrete instantiations.
+// So we need to mode realization into header and need not to compile matrix.cpp
+#include "matrix.cpp"

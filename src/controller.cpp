@@ -6,7 +6,7 @@
 void Controller::run()
 {
     try {
-        auto path = view_.getPath("Specify absolute path to a source image");
+        auto path = view_.getPath("Specify absolute path to source image: ");
         model_.setSrc(load_image(path.c_str()));
         auto options = view_.getOptions();
         processOptions(options);

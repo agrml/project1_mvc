@@ -46,10 +46,9 @@ void CliView::run()
 
 void CliView::output(const Image &res)
 {
-    std::cout << "Computation finished. Specify absolute path to place where you wold like to store the result." << std::endl <<
-              "Or leave the field empty: image will be saved in a temporary location and opened in system viewer" << std::endl;
-    auto path = this->getPath("");
-    if (!path.empty()) {
+    auto path = this->getPath("Computation finished. Specify absolute path to place where you wold like to store the result.\n"
+                                      "Or enter [no]: image will be saved in a temporary location and opened in a system viewer: ");
+    if (!path.empty() && path != "no") {
         save_image(res, path.c_str());
     } else if (!fork()) {
         // fixme: ubuntu specific?
@@ -67,6 +66,8 @@ std::string CliView::getPath(const std::string &msg)
         std::cout << msg << std::endl;
     }
     std::string s;
-    std::getline(std::cin, s);
+    while (std::isspace(std::cin.get())) {}
+    std::cin.unget();
+    std::getline(std::cin, s, '\n');
     return s;
 }
