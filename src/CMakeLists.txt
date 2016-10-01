@@ -17,7 +17,9 @@ add_executable(align_project ${SOURCE_FILES})
 
 # todo: add lib rebuilding target
 target_link_libraries(align_project
-        easybmp)
+        easybmp
+        ${GLOG_LIBRARIES}
+)
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 

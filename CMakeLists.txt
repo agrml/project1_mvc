@@ -7,14 +7,24 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -g -Wall -std=gnu++14")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Wformat-security -Wignored-qualifiers -Winit-self -Wswitch-default -Wfloat-equal -Wshadow -Wpointer-arith -Wtype-limits -Wempty-body -Wlogical-op -Wmissing-field-initializers -Wctor-dtor-privacy	-Wnon-virtual-dtor -Wstrict-null-sentinel -Wold-style-cast -Woverloaded-virtual -Wsign-promo -Weffc++")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-variable -Wno-unused-but-set-variable")
 
+find_package(PkgConfig)
+pkg_check_modules(GLOG REQUIRED libglog)
+
+
+
 # assume that EasyBMP has already been built
 include_directories(
         ${CMAKE_SOURCE_DIR}/src
-        ${CMAKE_SOURCE_DIR}/lib/EasyBMP/include)
+        ${CMAKE_SOURCE_DIR}/lib/EasyBMP/include
+        ${GLOG_INCLUDE_DIRS}
+)
 # fixme?  ${CMAKE_BINARY_DIR}/prefix/include
 # no. because we build easybmp in-source
 
-link_directories(${CMAKE_SOURCE_DIR}/lib/EasyBMP/lib)
+link_directories(
+        ${CMAKE_SOURCE_DIR}/lib/EasyBMP/lib
+        ${GLOG_LIBRARY_DIRS}
+)
 
 #find_package(EasyBMP)
 #if(${EasyBMP_FOUND} EQUAL 1)

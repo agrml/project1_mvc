@@ -1,3 +1,4 @@
+// parts of standard library
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -6,6 +7,10 @@
 #include <limits>
 #include <ctime>
 
+// parts of third-party libraries
+#include <glog/logging.h>
+
+// our modules
 #include "model.hpp"
 #include "view.hpp"
 #include "controller.hpp"
@@ -17,6 +22,10 @@
  */
 int main(int argc, char *argv[])
 {
+    // init third-party libraries
+    google::InitGoogleLogging(argv[0]);
+    google::InstallFailureSignalHandler();
+
     // parse argv
     constexpr int MODE_ARGC = 1;
     if (argc != MODE_ARGC + 1) {
