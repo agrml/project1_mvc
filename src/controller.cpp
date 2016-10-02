@@ -1,9 +1,10 @@
-#include "controller.hpp"
-#include "align.hpp"
 #include <sstream>
 
+#include "controller.hpp"
+#include "align.hpp"
 
-void Controller::run()
+
+void AppController::run()
 {
     try {
         auto path = view_.getPath("Specify absolute path to source image: ");
@@ -17,7 +18,7 @@ void Controller::run()
     }
 }
 
-void Controller::processOptions(OptionsType &options)
+void AppController::processOptions(OptionsType &options)
 {
     if (options["option"] == "align") {
         model_.setRes(align(model_.getSrc(),
@@ -33,9 +34,9 @@ void Controller::processOptions(OptionsType &options)
         ss >> radius;
         model_.setRes(median(model_.getSrc(), radius));
     } else {
-        throw std::string{"Controller::processOptions: Unknown option."};
+        throw std::string{"AppController::processOptions: Unknown option."};
     }
 }
 
-Controller::Controller(Model *model, View *view) : model_(*model), view_(*view) {}
+AppController::AppController(Model *model, View *view) : model_(*model), view_(*view) {}
 

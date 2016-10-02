@@ -9,21 +9,24 @@ set(SOURCE_FILES
         model.cpp
         view.cpp
         controller.cpp
-        )
+        Cli.cpp Cli.hpp)
 
 
-
-add_executable(align_project ${SOURCE_FILES})
-
-# todo: add lib rebuilding target
-target_link_libraries(align_project
+# *********************CLI***********************
+# todo: implement switching view mod in compil time
+add_executable(align_project_CLI ${SOURCE_FILES})
+target_link_libraries(align_project_CLI
         easybmp
         ${GLOG_LIBRARIES}
 )
+# fixme
+add_custom_command(TARGET align_project_CLI
+        PRE_LINK
+        COMMAND /bin/bash -c "make -C ${CMAKE_SOURCE_DIR}/lib/EasyBMP")
+
+# *********************GUI***********************
+# todo: implement
+
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
-# fixme
-add_custom_command(TARGET align_project
-        PRE_LINK
-        COMMAND /bin/bash -c "make -C ${CMAKE_SOURCE_DIR}/lib/EasyBMP")

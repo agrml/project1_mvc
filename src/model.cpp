@@ -1,7 +1,7 @@
 #include "io.hpp"
 #include "model.hpp"
 
-
+// model storage. may be placed to main
 
 Image Model::getSrc() const
 {

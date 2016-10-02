@@ -30,7 +30,7 @@ OptionsType CliView::getOptions()
             }
         }
     } else if (opt == "median") {
-        std::cout << "Enter blure radius: " << std::endl;
+        std::cout << "Enter blur radius: " << std::endl;
         std::cin >> opt;
         options.emplace(std::make_pair("radius", opt));
     }
@@ -42,6 +42,8 @@ void CliView::run()
     std::cout << "Align Project: Prac Edition. Mikhail Agranovskiy, 321 group" << std::endl << std::endl;
     std::cout << "Welcome to CLI. We have pleasure that you prefer us to GUI." << std::endl;
     std::cout << "We will ask you for further interactions soon." << std::endl;
+
+    /*would you like to run system viewer to see image changes?*/
 }
 
 void CliView::output(const Image &res)
@@ -70,4 +72,24 @@ std::string CliView::getPath(const std::string &msg)
     std::cin.unget();
     std::getline(std::cin, s, '\n');
     return s;
+}
+
+
+
+
+void CliImageView::run()
+{
+    // create the file
+    this->updateImage();
+    if (!fork()) {
+        std::stringstream ss;
+        // fixme: ubuntu specific?
+        ss << "xdg-open " << path_;
+        if (std::system(ss.str().c_str())) {};
+    }
+}
+
+void CliImageView::updateImage()
+{
+    save_image(model_->getImage(), path_.c_str());
 }

@@ -14,6 +14,16 @@
 #include "model.hpp"
 #include "view.hpp"
 #include "controller.hpp"
+#include "Cli.hpp"
+
+/// init third-party libraries
+void init(char *argv[])
+{
+    google::InitGoogleLogging(argv[0]);
+    google::InstallFailureSignalHandler();
+}
+
+
 
 /**
  * The main function :)
@@ -22,9 +32,7 @@
  */
 int main(int argc, char *argv[])
 {
-    // init third-party libraries
-    google::InitGoogleLogging(argv[0]);
-    google::InstallFailureSignalHandler();
+    init(argv);
 
     // parse argv
     constexpr int MODE_ARGC = 1;
@@ -35,21 +43,24 @@ int main(int argc, char *argv[])
 
 // todo: place them all on the heap: there is no one function (stack frame) prioritized in use of them
     // init view
-    View *view;
-  /*  if (param == "--gui") {
-        view = new GuiView{};
-    } else*/ if (param == "--cli") {
-        view = new CliView{};
+    ImageView *imageView;
+    TextView *textView;
+    /*if (param == "--gui") {
+        imageView = new QtImageView{};
+        logView = new QtLogView{};
+    } else */if (param == "--cli") {
+        imageView = new CliImageView{};
+        textView = new CliTextView{};
     } else {
         throw std::string{"unknown mode"};
     }
-    view->run();
+    auto ui = new Cli{imageView, textView};
 
     // init model
     Model *model = new Model{};
 
     // init controller
-    auto controller = new Controller{model, view};
+    auto controller = new AppController{model, view};
     controller->run();
 
     delete model;
