@@ -3,8 +3,8 @@
 #include <string>
 #include <map>
 #include <vector>
-#include "io.hpp"
-#include "model.hpp"
+//#include "io.hpp"
+#include "AppModel.hpp"
 
 using OptionsType = std::map<std::string, std::string>;
 
@@ -15,7 +15,7 @@ using OptionsType = std::map<std::string, std::string>;
 class View
 {
 protected:
-    Model *model_;
+    AppModel *model_ = nullptr;
 public:
     /**
      * View init
@@ -37,13 +37,13 @@ public:
 class ImageView : public View
 {
 public:
-    virtual void run(Model *model,
+    virtual void run(AppModel *model,
                      const std::string &path) = 0;
 //    /// in qt-signal version, connection will be established here
-//    ImageView(Model *model);
+//    ImageView(AppModel *model);
     /// updating view to the current state of the model.
     /// It will be a slot
-    virtual void updateImage() = 0;
+    virtual void updateImage() const = 0;
 
 //    virtual ~ImageView() {}
 };
@@ -53,15 +53,15 @@ class TextView : public View
 public:
     virtual void run() = 0;
 //    /// in qt-signal version, connection will be established here
-//    ImageView(Model *model);
+//    ImageView(AppModel *model);
 
 //    // getting input
-//    virtual std::string getPath(const std::string &msg) = 0;
-//    virtual OptionsType getOptions() = 0;
+    virtual OptionsType getOptions() const = 0;
 
-    virtual void write() = 0;
-    virtual void log() = 0;
-//    virtual operator<< = 0;
+    virtual void write(const std::string &msg) const = 0;
+    virtual void log(const std::string &msg) const = 0;
+//    todo: operator<<;
+    virtual std::string getLine(const std::string &msg) const = 0;
 
 //    ~ ну вроде он автоматически виртуальный если в родительском виртуальный
 };
@@ -73,10 +73,10 @@ class CliImageView : public ImageView
     std::string path_ = "";
 public:
     // note: TextView is used to get the path
-    void run(Model *model,
+    void run(AppModel *model,
              const std::string &path) override;
 //    void run() override;
-    void updateImage() override;
+    void updateImage() const override;
 
 //    virtual ~CliImageView() {}
 };
@@ -85,6 +85,9 @@ class CliTextView : public TextView
 {
 public:
     void run();
-    void write() override;
-    void log() override;
+    void write(const std::string &msg) const override;
+    void log(const std::string &msg) const override;
+    /// wipes all space simbols before first non-space symbol
+    std::string getLine(const std::string &msg) const override;
+    OptionsType getOptions() const override;
 };

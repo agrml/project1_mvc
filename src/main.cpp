@@ -11,10 +11,10 @@
 #include <glog/logging.h>
 
 // our modules
-#include "model.hpp"
-#include "view.hpp"
-#include "controller.hpp"
-#include "Cli.hpp"
+#include "AppModel.hpp"
+#include "SubViews.hpp"
+#include "AppController.hpp"
+#include "Ui.hpp"
 
 /// init third-party libraries
 void init(char *argv[])
@@ -54,17 +54,18 @@ int main(int argc, char *argv[])
     } else {
         throw std::string{"unknown mode"};
     }
-    auto ui = new Cli{imageView, textView};
 
-    // init model
-    Model *model = new Model{};
+    AppModel *model = new AppModel{};
 
-    // init controller
-    auto controller = new AppController{model, view};
+    auto ui = new Cli{imageView, textView, model};
+
+    auto controller = new AppController{model, ui};
     controller->run();
 
     delete model;
-    delete view;
+    delete ui;
+    delete imageView;
+    delete textView;
     delete controller;
 
     return 0;

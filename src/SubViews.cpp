@@ -1,12 +1,11 @@
 #include <iostream>
 #include <sstream>
 #include <unistd.h>
+#include <glog/logging.h>
 
-#include "view.hpp"
-#include "io.hpp"
+#include "SubViews.hpp"
 
-// todo: ifs in cin>>
-OptionsType CliView::getOptions()
+OptionsType CliTextView::getOptions() const
 {
     OptionsType options;
     std::string opt;
@@ -37,32 +36,14 @@ OptionsType CliView::getOptions()
     return options;
 }
 
-void CliView::run()
+void CliTextView::run()
 {
     std::cout << "Align Project: Prac Edition. Mikhail Agranovskiy, 321 group" << std::endl << std::endl;
     std::cout << "Welcome to CLI. We have pleasure that you prefer us to GUI." << std::endl;
-    std::cout << "We will ask you for further interactions soon." << std::endl;
-
-    /*would you like to run system viewer to see image changes?*/
+    std::cout << "We will ask you for further interactions soon..." << std::endl;
 }
 
-void CliView::output(const Image &res)
-{
-    auto path = this->getPath("Computation finished. Specify absolute path to place where you wold like to store the result.\n"
-                                      "Or enter [no]: image will be saved in a temporary location and opened in a system viewer: ");
-    if (!path.empty() && path != "no") {
-        save_image(res, path.c_str());
-    } else if (!fork()) {
-        // fixme: ubuntu specific?
-        path = "build/res.bmp";
-        std::stringstream ss;
-        save_image(res, path.c_str());
-        ss << "xdg-open " << path;
-        if (std::system(ss.str().c_str())) {};
-    }
-}
-
-std::string CliView::getPath(const std::string &msg)
+std::string CliTextView::getLine(const std::string &msg) const
 {
     if (!msg.empty()) {
         std::cout << msg << std::endl;
@@ -74,22 +55,32 @@ std::string CliView::getPath(const std::string &msg)
     return s;
 }
 
+void CliTextView::write(const std::string &msg) const
+{
+    std::cout << msg << std::endl;
+    // todo: std::flush
+}
 
+void CliTextView::log(const std::string &msg) const
+{
+    LOG(INFO) << msg;
+}
 
-
-void CliImageView::run()
+void CliImageView::run(AppModel *model,
+                       const std::string &path)
 {
     // create the file
     this->updateImage();
-    if (!fork()) {
-        std::stringstream ss;
-        // fixme: ubuntu specific?
-        ss << "xdg-open " << path_;
-        if (std::system(ss.str().c_str())) {};
-    }
+    /*todo: would you like to run system viewer to see image changes?*/
+//    if (!fork()) {
+//        std::stringstream ss;
+//        // fixme: ubuntu specific?
+//        ss << "xdg-open " << path_;
+//        if (std::system(ss.str().c_str())) {};
+//    }
 }
 
-void CliImageView::updateImage()
+void CliImageView::updateImage() const
 {
-    save_image(model_->getImage(), path_.c_str());
+    save_image(model_->getImg(), path_.c_str());
 }

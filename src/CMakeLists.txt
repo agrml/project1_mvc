@@ -6,21 +6,21 @@ set(SOURCE_FILES
         io.cpp
         MatrixMath.cpp
 
-        model.cpp
-        view.cpp
-        controller.cpp
-        Cli.cpp Cli.hpp)
+        AppModel.cpp
+        SubViews.cpp
+        AppController.cpp
+        Ui.cpp)
 
 
 # *********************CLI***********************
 # todo: implement switching view mod in compil time
-add_executable(align_project_CLI ${SOURCE_FILES})
-target_link_libraries(align_project_CLI
+add_executable(align_project ${SOURCE_FILES})
+target_link_libraries(align_project
         easybmp
         ${GLOG_LIBRARIES}
 )
 # fixme
-add_custom_command(TARGET align_project_CLI
+add_custom_command(TARGET align_project
         PRE_LINK
         COMMAND /bin/bash -c "make -C ${CMAKE_SOURCE_DIR}/lib/EasyBMP")
 
