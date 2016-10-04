@@ -27,3 +27,5 @@ sudo apt install libgoogle-glog-dev
 Setup environment variables (run once per shell session):
     # Run it INSIDE build directory
     $ source ../glog_env.sh
+
+Для упрощения реализации вторичных задач, в классы напрямую втроена работа с qt-сигналами

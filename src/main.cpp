@@ -24,7 +24,6 @@ void init(char *argv[])
 }
 
 
-
 /**
  * The main function :)
  *
@@ -32,6 +31,9 @@ void init(char *argv[])
  */
 int main(int argc, char *argv[])
 {
+    std::ifstream in("/Data/tmp/in.txt");
+    std::cin.rdbuf(in.rdbuf());
+
     init(argv);
 
     // parse argv
@@ -43,30 +45,22 @@ int main(int argc, char *argv[])
 
 // todo: place them all on the heap: there is no one function (stack frame) prioritized in use of them
     // init view
-    ImageView *imageView;
-    TextView *textView;
+    std::shared_ptr<ImageView> imageView;
+    std::shared_ptr<TextView> textView;
     /*if (param == "--gui") {
-        imageView = new QtImageView{};
-        logView = new QtLogView{};
+        imageView = std::make_shared<QtImageView>();
+        logView = std::make_shared<QtLogView>();
     } else */if (param == "--cli") {
-        imageView = new CliImageView{};
-        textView = new CliTextView{};
+        imageView = std::make_shared<CliImageView>();
+        textView = std::make_shared<CliTextView>();
     } else {
         throw std::string{"unknown mode"};
     }
 
-    AppModel *model = new AppModel{};
-
-    auto ui = new Cli{imageView, textView, model};
-
-    auto controller = new AppController{model, ui};
+    auto model = std::make_shared<AppModel>();
+    auto ui = std::make_shared<Cli>(imageView, textView, model);
+    auto controller = std::make_shared<AppController>(model, ui);
     controller->run();
-
-    delete model;
-    delete ui;
-    delete imageView;
-    delete textView;
-    delete controller;
 
     return 0;
 }

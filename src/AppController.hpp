@@ -5,10 +5,11 @@
 
 class AppController
 {
-    AppModel &model_;
-    Ui &ui_;
+    std::shared_ptr<AppModel> model_;
+    std::shared_ptr<Ui> ui_;
 public:
-    AppController(AppModel *model, Ui *ui);
+    AppController(std::shared_ptr<AppModel> model,
+                  std::shared_ptr<Ui> ui);
     void run();
 private:
     /// the main part of working process

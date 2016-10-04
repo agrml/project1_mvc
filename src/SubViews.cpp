@@ -66,9 +66,11 @@ void CliTextView::log(const std::string &msg) const
     LOG(INFO) << msg;
 }
 
-void CliImageView::run(AppModel *model,
+void CliImageView::run(std::shared_ptr<AppModel> model,
                        const std::string &path)
 {
+    model_ = model;
+    path_ = path;
     // create the file
     this->updateImage();
     /*todo: would you like to run system viewer to see image changes?*/

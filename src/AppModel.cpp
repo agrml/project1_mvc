@@ -6,7 +6,6 @@
 
 Image AppModel::getImg() const
 {
-    LOG(ERROR) << 1;
     return *img_;
 }
 
@@ -17,7 +16,4 @@ void AppModel::setImg(const Image &img)
 
 }
 
-AppModel::AppModel()
-{
-    img_ = new Image{0, 0};
-}
+AppModel::AppModel() : img_(std::make_shared<Image>()) {}

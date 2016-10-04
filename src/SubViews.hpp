@@ -14,8 +14,6 @@ using OptionsType = std::map<std::string, std::string>;
 /// Base class for all views. Other modules interact with View objects.
 class View
 {
-protected:
-    AppModel *model_ = nullptr;
 public:
     /**
      * View init
@@ -37,7 +35,7 @@ public:
 class ImageView : public View
 {
 public:
-    virtual void run(AppModel *model,
+    virtual void run(std::shared_ptr<AppModel> model,
                      const std::string &path) = 0;
 //    /// in qt-signal version, connection will be established here
 //    ImageView(AppModel *model);
@@ -69,11 +67,12 @@ public:
 // ==============================LEVEL 3===================================
 class CliImageView : public ImageView
 {
+    std::shared_ptr<AppModel> model_{};
     /// where to save image
     std::string path_ = "";
 public:
     // note: TextView is used to get the path
-    void run(AppModel *model,
+    void run(std::shared_ptr<AppModel> model,
              const std::string &path) override;
 //    void run() override;
     void updateImage() const override;
@@ -83,6 +82,7 @@ public:
 
 class CliTextView : public TextView
 {
+    std::shared_ptr<AppModel> model_{};
 public:
     void run();
     void write(const std::string &msg) const override;

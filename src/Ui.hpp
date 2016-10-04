@@ -7,12 +7,14 @@
 
 class Cli /*inherit? view? observer?*/
 {
-    ImageView &imageView_;
-    TextView &textView_;
-    AppModel &model_;
+    std::shared_ptr<ImageView> imageView_;
+    std::shared_ptr<TextView> textView_;
+    std::shared_ptr<AppModel> appModel_;
 public:
     /// calls subviews' `run`s and more
-    Cli(ImageView *, TextView *, AppModel *);
+    Cli(std::shared_ptr<ImageView> imageView,
+        std::shared_ptr<TextView> textView,
+        std::shared_ptr<AppModel> appModel);
 
     void run();
     void runImageView(const std::string &path);
@@ -21,10 +23,10 @@ public:
     void onModelUpdate();
 
     // using text view
-    void write(const std::string &msg) { textView_.write(msg); }
-    void log(const std::string &msg) { textView_.log(msg); }
-    std::string getLine(const std::string &msg) { return textView_.getLine(msg); }
-    OptionsType getOptions() { return textView_.getOptions(); }
+    void write(const std::string &msg) { textView_->write(msg); }
+    void log(const std::string &msg) { textView_->log(msg); }
+    std::string getLine(const std::string &msg) { return textView_->getLine(msg); }
+    OptionsType getOptions() { return textView_->getOptions(); }
 
 
 };

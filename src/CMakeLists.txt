@@ -2,6 +2,7 @@ set(SOURCE_FILES
         main.cpp
 
 #        matrix.cpp -- no! Read note at the end of matrix.hpp
+
         align.cpp
         io.cpp
         MatrixMath.cpp
@@ -9,7 +10,8 @@ set(SOURCE_FILES
         AppModel.cpp
         SubViews.cpp
         AppController.cpp
-        Ui.cpp)
+        Ui.cpp
+)
 
 
 # *********************CLI***********************
