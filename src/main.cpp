@@ -9,6 +9,7 @@
 
 // parts of third-party libraries
 #include <glog/logging.h>
+#include <QtCore>
 
 // our modules
 #include "AppModel.hpp"
@@ -17,10 +18,12 @@
 #include "Ui.hpp"
 
 /// init third-party libraries
-void init(char *argv[])
+void init(int argc, char *argv[])
 {
     google::InitGoogleLogging(argv[0]);
     google::InstallFailureSignalHandler();
+
+//    QCoreApplication app(argc, argv);
 }
 
 
@@ -31,10 +34,10 @@ void init(char *argv[])
  */
 int main(int argc, char *argv[])
 {
-    std::ifstream in("/Data/tmp/in.txt");
-    std::cin.rdbuf(in.rdbuf());
+//    std::ifstream in("/Data/tmp/in.txt");
+//    std::cin.rdbuf(in.rdbuf());
 
-    init(argv);
+    init(argc, argv);
 
     // parse argv
     constexpr int MODE_ARGC = 1;
@@ -56,7 +59,6 @@ int main(int argc, char *argv[])
     } else {
         throw std::string{"unknown mode"};
     }
-
     auto model = std::make_shared<AppModel>();
     auto ui = std::make_shared<Cli>(imageView, textView, model);
     auto controller = std::make_shared<AppController>(model, ui);

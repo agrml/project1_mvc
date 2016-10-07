@@ -3,10 +3,7 @@
 #include "io.hpp"
 #include "matrix.hpp"
 
-Image align(Image srcImage,
-            bool isPostprocessing,
-            std::string postprocessingType,
-            bool isMirror);
+// align() is moved to AppModel class implementation
 
 Image unsharp(Image src_image);
 

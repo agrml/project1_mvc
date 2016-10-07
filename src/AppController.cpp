@@ -7,16 +7,21 @@
 void AppController::run()
 {
     try {
+        QObject::connect(model_.get(), SIGNAL(log(const std::string &)),
+                         ui_.get(), SLOT(log(const std::string &)));
         ui_->run();
-        auto path = ui_->getLine("Specify absolute path to the source image: ");
-        model_->setImg(load_image(path.c_str()));
+        auto srcPath = ui_->getLine("Specify absolute path to the source image: ");
+        model_->setImg(load_image(srcPath.c_str()));
+        QObject::connect(model_.get(), SIGNAL(modelUpdated()),
+                         ui_.get(), SLOT(onModelUpdate()));
+        auto dstPath = ui_->getLine("Specify absolute path to place where you wold like to store the result: ");
+        ui_->runImageView(dstPath);
 
         auto options = ui_->getOptions();
-        const std::string &DestImgPath = ui_->getLine("Specify absolute path to place where you wold like to store the result: ");
-        ui_->runImageView(DestImgPath);
+
 
         processOptions(options);
-        ui_->log("All tasks are finished. Goodbye!");
+        ui_->log("All tasks are finished.");
     } catch (const std::string &s) {
         ui_->log(s);
     }
@@ -24,31 +29,18 @@ void AppController::run()
 
 void AppController::processOptions(const OptionsType &options)
 {
-    if (options.at("option") == "align") {
-        auto param2 = options.at("isPostprocessing") == "true";
-        std::string param3;
-        if (param2) {
-            param3 = options.at("postprocessingType");
-        }
-        bool param4 = false;
-        if (options.find("isMirror") != options.end()) {
-            param4 = options.at("isMirror") == "true";
-        }
-        model_->setImg(align(model_->getImg(),
-                             param2,
-                             param3,
-                             param4));
-    } else if (options.at("option") == "gray-world") {
-        model_->setImg(gray_world(model_->getImg()));
-    } else if (options.at("option") == "median") {
-        // todo: test
-        std::stringstream ss{options.at("radius")};
-        int radius;
-        ss >> radius;
-        model_->setImg(median(model_->getImg(), radius));
-    } else {
-        throw std::string{"AppController::processOptions: Unknown option."};
+    auto param2 = options.at("isPostprocessing") == "true";
+    std::string param3;
+    if (param2) {
+        param3 = options.at("postprocessingType");
     }
+    bool param4 = false;
+    if (options.find("isMirror") != options.end()) {
+        param4 = options.at("isMirror") == "true";
+    }
+    model_->align(param2,
+                  param3,
+                  param4);
 }
 
 AppController::AppController(std::shared_ptr<AppModel> model,

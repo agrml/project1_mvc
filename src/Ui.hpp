@@ -5,8 +5,9 @@
 /// The app view (AppView) -- the `view` controlled by the `controller` (AppController class)
 /// and represents the `model` -- the state of the app (no the state of the image. it is meaningfull to note that.)
 
-class Cli /*inherit? view? observer?*/
+class Cli : public View
 {
+    Q_OBJECT
     std::shared_ptr<ImageView> imageView_;
     std::shared_ptr<TextView> textView_;
     std::shared_ptr<AppModel> appModel_;
@@ -18,13 +19,14 @@ public:
 
     void run();
     void runImageView(const std::string &path);
-    // using image view
-// todo: slot
+protected slots:
     void onModelUpdate();
-
+public:
     // using text view
     void write(const std::string &msg) { textView_->write(msg); }
+public slots:
     void log(const std::string &msg) { textView_->log(msg); }
+public:
     std::string getLine(const std::string &msg) { return textView_->getLine(msg); }
     OptionsType getOptions() { return textView_->getOptions(); }
 

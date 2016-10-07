@@ -9,29 +9,20 @@ OptionsType CliTextView::getOptions() const
 {
     OptionsType options;
     std::string opt;
-    std::cout << "What would you like to do? [align|gray-world|median]" << std::endl;
-    std::cin >> opt;
-    options.emplace(std::make_pair("option", opt));
-    if (opt == "align") {
-        std::cout << "Postprocessing? [gray-world|unsharp|no -- to finish]";
-        if ((std::cin >> opt) && opt[0] != 'n') {
-            options.emplace(std::make_pair("isPostprocessing", "true"));
-            options.emplace(std::make_pair("postprocessingType", opt));
+    std::cout << "Postprocessing? [gray-world|unsharp|no -- to finish]";
+    if ((std::cin >> opt) && opt[0] != 'n') {
+        options.emplace(std::make_pair("isPostprocessing", "true"));
+        options.emplace(std::make_pair("postprocessingType", opt));
+    } else {
+        options.emplace(std::make_pair("isPostprocessing", "false"));
+    }
+    if (opt == "unsharp") {
+        std::cout << "Would you like to extend image by mirroring before postprocessing? [yes|no]" << std::endl;
+        if ((std::cin >> opt) && opt == "yes") {
+            options.emplace(std::make_pair("isMirror", "true"));
         } else {
-            options.emplace(std::make_pair("isPostprocessing", "false"));
+            options.emplace(std::make_pair("isMirror", "false"));
         }
-        if (opt == "unsharp") {
-            std::cout << "Would you like to extend image by mirroring before postprocessing? [yes|no]" << std::endl;
-            if ((std::cin >> opt) && opt == "yes") {
-                options.emplace(std::make_pair("isMirror", "true"));
-            } else {
-                options.emplace(std::make_pair("isMirror", "false"));
-            }
-        }
-    } else if (opt == "median") {
-        std::cout << "Enter blur radius: " << std::endl;
-        std::cin >> opt;
-        options.emplace(std::make_pair("radius", opt));
     }
     return options;
 }
@@ -70,19 +61,19 @@ void CliImageView::run(std::shared_ptr<AppModel> model,
                        const std::string &path)
 {
     model_ = model;
-    path_ = path;
+    save_path_ = path;
     // create the file
     this->updateImage();
     /*todo: would you like to run system viewer to see image changes?*/
-//    if (!fork()) {
-//        std::stringstream ss;
-//        // fixme: ubuntu specific?
-//        ss << "xdg-open " << path_;
-//        if (std::system(ss.str().c_str())) {};
-//    }
+    if (!fork()) {
+        std::stringstream ss;
+        // fixme: ubuntu specific?
+        ss << "xdg-open " << save_path_;
+        if (std::system(ss.str().c_str())) {};
+    }
 }
 
 void CliImageView::updateImage() const
 {
-    save_image(model_->getImg(), path_.c_str());
+    save_image(model_->getImg(), save_path_.c_str());
 }

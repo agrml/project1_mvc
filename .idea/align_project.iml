@@ -7,23 +7,51 @@
       <excludeFolder url="file://$MODULE_DIR$/build" />
       <excludeFolder url="file://$MODULE_DIR$/local" />
     </content>
+    <content url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/project1_mvc-7016150f/7016150f/Debug/src/align_project_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/project1_mvc-7016150f/7016150f/Debug/src/align_project_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/project1_mvc-7016150f/7016150f/MinSizeRel/src/align_project_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/project1_mvc-7016150f/7016150f/MinSizeRel/src/align_project_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/project1_mvc-7016150f/7016150f/RelWithDebInfo/src/align_project_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/project1_mvc-7016150f/7016150f/RelWithDebInfo/src/align_project_automoc.cpp" isTestSource="false" />
+    </content>
+    <content url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/project1_mvc-7016150f/7016150f/Release/src/align_project_automoc.cpp">
+      <sourceFolder url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/project1_mvc-7016150f/7016150f/Release/src/align_project_automoc.cpp" isTestSource="false" />
+    </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">
       <library name="Header Search Paths">
         <CLASSES>
-          <root url="file://$MODULE_DIR$/lib" />
+          <root url="file:///usr/include" />
+          <root url="file:///usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64" />
           <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include" />
           <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include-fixed" />
-          <root url="file:///usr/include" />
           <root url="file:///usr/local/include" />
+          <root url="file://$MODULE_DIR$/lib" />
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/project1_mvc-7016150f/7016150f/Release/src" />
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/project1_mvc-7016150f/7016150f/Debug/src" />
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/project1_mvc-7016150f/7016150f/RelWithDebInfo/src" />
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/project1_mvc-7016150f/7016150f/MinSizeRel/src" />
         </CLASSES>
         <SOURCES>
-          <root url="file://$MODULE_DIR$/lib" />
+          <root url="file:///usr/include" />
+          <root url="file:///usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64" />
           <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include" />
           <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include-fixed" />
-          <root url="file:///usr/include" />
           <root url="file:///usr/local/include" />
+          <root url="file://$MODULE_DIR$/lib" />
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/project1_mvc-7016150f/7016150f/Release/src" />
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/project1_mvc-7016150f/7016150f/Debug/src" />
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/project1_mvc-7016150f/7016150f/RelWithDebInfo/src" />
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/project1_mvc-7016150f/7016150f/MinSizeRel/src" />
         </SOURCES>
+        <excluded>
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/project1_mvc-7016150f/7016150f/Release/src/align_project_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/project1_mvc-7016150f/7016150f/Debug/src/align_project_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/project1_mvc-7016150f/7016150f/RelWithDebInfo/src/align_project_automoc.cpp" />
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/project1_mvc-7016150f/7016150f/MinSizeRel/src/align_project_automoc.cpp" />
+        </excluded>
       </library>
     </orderEntry>
   </component>

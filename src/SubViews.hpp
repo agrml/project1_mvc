@@ -3,6 +3,8 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <QtCore>
+#include <QtCore/QObject>
 //#include "io.hpp"
 #include "AppModel.hpp"
 
@@ -12,7 +14,7 @@ using OptionsType = std::map<std::string, std::string>;
 // fixme: интерфейс -- это когда констуктор приватный?
 // ==============================LEVEL 1===================================
 /// Base class for all views. Other modules interact with View objects.
-class View
+class View : public QObject
 {
 public:
     /**
@@ -23,12 +25,8 @@ public:
      * So we can't do this. Actually we nead to implement singltone pattern but we will not. (So lazy)
      * So we implement `run` method.
      */
-//    virtual void run() = 0;
-
+public:
     virtual ~View() {};
-
-//public slots:
-//    void onUpdate();
 };
 
 // ==============================LEVEL 2===================================
@@ -50,18 +48,12 @@ class TextView : public View
 {
 public:
     virtual void run() = 0;
-//    /// in qt-signal version, connection will be established here
-//    ImageView(AppModel *model);
-
-//    // getting input
+    /// getting input
     virtual OptionsType getOptions() const = 0;
 
     virtual void write(const std::string &msg) const = 0;
     virtual void log(const std::string &msg) const = 0;
-//    todo: operator<<;
     virtual std::string getLine(const std::string &msg) const = 0;
-
-//    ~ ну вроде он автоматически виртуальный если в родительском виртуальный
 };
 
 // ==============================LEVEL 3===================================
@@ -69,15 +61,11 @@ class CliImageView : public ImageView
 {
     std::shared_ptr<AppModel> model_{};
     /// where to save image
-    std::string path_ = "";
+    std::string save_path_ = "";
 public:
-    // note: TextView is used to get the path
     void run(std::shared_ptr<AppModel> model,
              const std::string &path) override;
-//    void run() override;
     void updateImage() const override;
-
-//    virtual ~CliImageView() {}
 };
 
 class CliTextView : public TextView

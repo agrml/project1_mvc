@@ -9,7 +9,7 @@ void Cli::run()
 void Cli::onModelUpdate()
 {
     imageView_->updateImage();
-    textView_->log("Image updated");
+    textView_->log("Image is updated");
 }
 
 void Cli::runImageView(const std::string &path)
