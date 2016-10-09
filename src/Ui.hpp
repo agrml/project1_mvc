@@ -1,53 +1,76 @@
 #pragma once
 
 #include "SubViews.hpp"
+#include <QtWidgets>
+
 
 /// The app view (AppView) -- the `view` controlled by the `controller` (AppController class)
 /// and represents the `model` -- the state of the app (no the state of the image. it is meaningfull to note that.)
 
-class Cli : public View
+class Ui : public View
 {
     Q_OBJECT
-    std::shared_ptr<ImageView> imageView_;
-    std::shared_ptr<TextView> textView_;
-    std::shared_ptr<AppModel> appModel_;
 public:
-    /// calls subviews' `run`s and more
-    Cli(std::shared_ptr<ImageView> imageView,
-        std::shared_ptr<TextView> textView,
-        std::shared_ptr<AppModel> appModel);
-
-    void run();
-    void runImageView(const std::string &path);
+    virtual void run(std::shared_ptr<AppModel> appModel) = 0;
+    virtual void runImageView() = 0;
 protected slots:
-    void onModelUpdate();
-public:
-    // using text view
-    void write(const std::string &msg) { textView_->write(msg); }
+    virtual void onModelUpdate() = 0;
+//public:
+//    virtual void write(const std::string &msg) = 0;
 public slots:
-    void log(const std::string &msg) { textView_->log(msg); }
+    virtual void log(const std::string &msg) = 0;
 public:
-    std::string getLine(const std::string &msg) { return textView_->getLine(msg); }
-    OptionsType getOptions() { return textView_->getOptions(); }
-
-
+    virtual std::string getLine(const std::string &msg) = 0;
+    virtual OptionsType getOptions() = 0;
 };
 
-using Ui = Cli;
+/// Implements programmer side of UI (api?) and uses console io and system viewer as user side of UI.
+class Cli : public Ui
+{
+    Q_OBJECT
+    std::shared_ptr<CliImageView> imageView_;
+    std::shared_ptr<CliTextView> textView_;
+    std::shared_ptr<AppModel> appModel_{};
+public:
+    Cli(std::shared_ptr<CliImageView> imageView,
+        std::shared_ptr<CliTextView> textView);
 
+    void run(std::shared_ptr<AppModel> appModel) override;
+    void runImageView() override;
+protected slots:
+    void onModelUpdate() override;
+public slots:
+    void log(const std::string &msg) override;
+public:
+    std::string getLine(const std::string &msg) override;
+    OptionsType getOptions() override;
+};
 
-
-
-// todo:
-//class Cli : public Ui
-//{
-//public:
-//    Ui(ImageView *, TextView *);
-//
-//};
-//
-//
+/// Implements programmer side of UI and user side (Qt GUI application) too. Uses it as user side of UI.
 //class Gui : public Ui
 //{
+//Q_OBJECT
+//    std::shared_ptr<GuiImageView> imageView_;
+//    std::shared_ptr<GuiTextView> textView_;
+//    std::shared_ptr<AppModel> appModel_{};
 //
+//    // main window widget
+//    std::shared_ptr<QMainWindow> window_{};
+//    std::shared_ptr<QHBoxLayout> layout_{};
+//
+//    // other widgets{}
+//
+//public:
+//    Gui(std::shared_ptr<GuiImageView> imageView,
+//        std::shared_ptr<GuiTextView> textView);
+//
+//    void run(std::shared_ptr<AppModel> appModel) override;
+//    void runImageView() override;
+//protected slots:
+//    void onModelUpdate() override;
+//public slots:
+//    void log(const std::string &msg) override;
+//public:
+//    std::string getLine(const std::string &msg) override;
+//    OptionsType getOptions() override;
 //};

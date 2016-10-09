@@ -9,13 +9,12 @@ void AppController::run()
     try {
         QObject::connect(model_.get(), SIGNAL(log(const std::string &)),
                          ui_.get(), SLOT(log(const std::string &)));
-        ui_->run();
-        auto srcPath = ui_->getLine("Specify absolute path to the source image: ");
+        ui_->run(model_);
+        auto srcPath = ui_->getLine("Specify path to the source image: ");
         model_->setImg(load_image(srcPath.c_str()));
         QObject::connect(model_.get(), SIGNAL(modelUpdated()),
                          ui_.get(), SLOT(onModelUpdate()));
-        auto dstPath = ui_->getLine("Specify absolute path to place where you wold like to store the result: ");
-        ui_->runImageView(dstPath);
+        ui_->runImageView();
 
         auto options = ui_->getOptions();
 

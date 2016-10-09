@@ -1,9 +1,10 @@
 #include "Ui.hpp"
 
 
-void Cli::run()
+void Cli::run(std::shared_ptr<AppModel> appModel)
 {
-    textView_->run();
+    appModel_ = appModel;
+    textView_->run(appModel_);
 }
 
 void Cli::onModelUpdate()
@@ -12,13 +13,26 @@ void Cli::onModelUpdate()
     textView_->log("Image is updated");
 }
 
-void Cli::runImageView(const std::string &path)
+void Cli::runImageView()
 {
-    imageView_->run(appModel_, path);
+    imageView_->run(appModel_);
 }
 
-Cli::Cli(std::shared_ptr<ImageView> imageView,
-         std::shared_ptr<TextView> textView,
-         std::shared_ptr<AppModel> appModel) : imageView_(imageView),
-                                               textView_(textView),
-                                               appModel_(appModel) {}
+Cli::Cli(std::shared_ptr<CliImageView> imageView,
+         std::shared_ptr<CliTextView> textView) : imageView_(imageView),
+                                               textView_(textView) {}
+
+void Cli::log(const std::string &msg)
+{
+    textView_->log(msg);
+}
+
+std::string Cli::getLine(const std::string &msg)
+{
+    return textView_->getLine(msg);
+}
+
+OptionsType Cli::getOptions()
+{
+    return textView_->getOptions();
+}

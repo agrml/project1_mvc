@@ -11,7 +11,7 @@ find_package(PkgConfig)
 pkg_check_modules(GLOG REQUIRED libglog)
 
 find_package(Qt5Core)
-
+find_package(Qt5Widgets)
 
 
 # assume that EasyBMP has already been built
@@ -20,15 +20,15 @@ include_directories(
         ${CMAKE_SOURCE_DIR}/src
         ${CMAKE_SOURCE_DIR}/lib/EasyBMP/include
         ${GLOG_INCLUDE_DIRS}
-#        ${Qt5Core_INCLUDE_DIRS}
+        ${Qt5Core_INCLUDE_DIRS}
+        ${Qt5Widgets_INCLUDE_DIRS}
 )
-# fixme?  ${CMAKE_BINARY_DIR}/prefix/include
-# no. because we build easybmp in-source
 
 link_directories(
         ${CMAKE_SOURCE_DIR}/lib/EasyBMP/lib
         ${GLOG_LIBRARY_DIRS}
         Qt5::Core
+        Qt5::Widgets
 
 )
 

@@ -9,7 +9,7 @@ OptionsType CliTextView::getOptions() const
 {
     OptionsType options;
     std::string opt;
-    std::cout << "Postprocessing? [gray-world|unsharp|no -- to finish]";
+    std::cout << "Postprocessing? [gray-world|unsharp|no]";
     if ((std::cin >> opt) && opt[0] != 'n') {
         options.emplace(std::make_pair("isPostprocessing", "true"));
         options.emplace(std::make_pair("postprocessingType", opt));
@@ -27,7 +27,7 @@ OptionsType CliTextView::getOptions() const
     return options;
 }
 
-void CliTextView::run()
+void CliTextView::run(std::shared_ptr<AppModel> model)
 {
     std::cout << "Align Project: Prac Edition. Mikhail Agranovskiy, 321 group" << std::endl << std::endl;
     std::cout << "Welcome to CLI. We have pleasure that you prefer us to GUI." << std::endl;
@@ -46,28 +46,20 @@ std::string CliTextView::getLine(const std::string &msg) const
     return s;
 }
 
-void CliTextView::write(const std::string &msg) const
-{
-    std::cout << msg << std::endl;
-    // todo: std::flush
-}
-
 void CliTextView::log(const std::string &msg) const
 {
     LOG(INFO) << msg;
 }
 
-void CliImageView::run(std::shared_ptr<AppModel> model,
-                       const std::string &path)
+void CliImageView::run(std::shared_ptr<AppModel> model)
 {
     model_ = model;
-    save_path_ = path;
     // create the file
     this->updateImage();
-    /*todo: would you like to run system viewer to see image changes?*/
+    // open system viewer to watch image changes
     if (!fork()) {
         std::stringstream ss;
-        // fixme: ubuntu specific?
+        // note: ubuntu specific?
         ss << "xdg-open " << save_path_;
         if (std::system(ss.str().c_str())) {};
     }
@@ -75,5 +67,5 @@ void CliImageView::run(std::shared_ptr<AppModel> model,
 
 void CliImageView::updateImage() const
 {
-    save_image(model_->getImg(), save_path_.c_str());
+    save_image(model_->getImg(), save_path_);
 }
