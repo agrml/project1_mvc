@@ -25,8 +25,8 @@
         <CLASSES>
           <root url="file:///usr/include" />
           <root url="file:///usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64" />
-          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include" />
           <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include-fixed" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include" />
           <root url="file:///usr/local/include" />
           <root url="file://$MODULE_DIR$/lib" />
           <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/project1_mvc-7016150f/7016150f/Release/src" />
@@ -37,8 +37,8 @@
         <SOURCES>
           <root url="file:///usr/include" />
           <root url="file:///usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64" />
-          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include" />
           <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include-fixed" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include" />
           <root url="file:///usr/local/include" />
           <root url="file://$MODULE_DIR$/lib" />
           <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/project1_mvc-7016150f/7016150f/Release/src" />
